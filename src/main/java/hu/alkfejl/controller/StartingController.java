@@ -25,7 +25,7 @@ public class StartingController extends BaseController {
     }
 
     public void playerOne(ActionEvent actionEvent) {
-
+        sceneManager.switchScene("../canvas.fxml");
     }
 
     public void playerTwo(ActionEvent actionEvent) {
