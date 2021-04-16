@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SnakeModel {
+    private ObjectProperty<PlayerModel> owner = new SimpleObjectProperty<>();
     private IntegerProperty speed = new SimpleIntegerProperty();
     private ObjectProperty<Color> color = new SimpleObjectProperty<>();
     private Direction direction;
@@ -83,5 +84,19 @@ public class SnakeModel {
 
     public List<BodyPart> getBody() {
         return body;
+    }
+
+    public PlayerModel getOwner() {
+        return owner.get();
+    }
+
+    public ObjectProperty<PlayerModel> ownerProperty() {
+        return owner;
+    }
+
+    // mutual relation
+    public void setOwner(PlayerModel owner) {
+        owner.setSnake(this);
+        this.owner.set(owner);
     }
 }

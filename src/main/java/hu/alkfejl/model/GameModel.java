@@ -1,11 +1,9 @@
 package hu.alkfejl.model;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-// rendering will be inside GameController's game loop
+// rendering will be inside CanvasController's game loop
 public class GameModel {
     private ObjectProperty<PlayerModel> player1 = new SimpleObjectProperty<>();
     private ObjectProperty<PlayerModel> player2 = new SimpleObjectProperty<>();

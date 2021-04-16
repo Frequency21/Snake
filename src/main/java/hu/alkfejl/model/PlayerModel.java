@@ -1,20 +1,37 @@
 package hu.alkfejl.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 
 // TODO: 2021. 04. 15. increment score based on snake's speed
 public class PlayerModel {
-    private final ObjectProperty<SnakeModel> snake = new SimpleObjectProperty<>();
     private final IntegerProperty score = new SimpleIntegerProperty();
+    private final StringProperty name = new SimpleStringProperty();
+    private ObjectProperty<SnakeModel> snake = new SimpleObjectProperty<>();
     
     public PlayerModel() { }
 
-    public PlayerModel(SnakeModel snake, int score) {
-        this.snake.set(snake);
+    public int getScore() {
+        return score.get();
+    }
+
+    public IntegerProperty scoreProperty() {
+        return score;
+    }
+
+    public void setScore(int score) {
         this.score.set(score);
+    }
+
+    public String getName() {
+        return name.get();
+    }
+
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name.set(name);
     }
 
     public SnakeModel getSnake() {
@@ -27,17 +44,5 @@ public class PlayerModel {
 
     public void setSnake(SnakeModel snake) {
         this.snake.set(snake);
-    }
-
-    public int getScore() {
-        return score.get();
-    }
-
-    public IntegerProperty scoreProperty() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score.set(score);
     }
 }

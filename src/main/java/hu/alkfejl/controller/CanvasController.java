@@ -4,14 +4,14 @@ import hu.alkfejl.model.FruitModel;
 import hu.alkfejl.model.FruitType;
 import hu.alkfejl.model.GameModel;
 import hu.alkfejl.model.Position;
-import javafx.event.ActionEvent;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,13 +20,9 @@ public class CanvasController extends BaseController {
     @FXML
     private Canvas canvas;
     private GraphicsContext gc;
-    private List<FruitModel> fruits = new ArrayList<>();
+    private ObjectProperty<List<FruitModel>> fruits = new SimpleObjectProperty<>();
     private int blockSize;
 
-    public void drawRectangle(ActionEvent actionEvent) {
-        drawFruits(fruits);
-        drawGrid();
-    }
 
     public void keyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
@@ -49,8 +45,9 @@ public class CanvasController extends BaseController {
         blockSize = gameModel.getBoard().getBlockSize();
         canvas.heightProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
         canvas.widthProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
+        // bind fruits
+        gameModel.getBoard().fruitsProperty().bindBidirectional(fruits);
         gc = canvas.getGraphicsContext2D();
-        for (var type : FruitType.values()) fruits.add(new FruitModel(type));
     }
 
     void drawFruits(List<FruitModel> fruits) {
@@ -66,7 +63,7 @@ public class CanvasController extends BaseController {
     }
 
     void drawGrid() {
-        gc.setFill(Color.BLACK);
+        gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, gameModel.getBoard().getSizePx(), gameModel.getBoard().getSizePx());
         gc.setStroke(Color.LIGHTGRAY);
         gc.setLineWidth(0.5);
