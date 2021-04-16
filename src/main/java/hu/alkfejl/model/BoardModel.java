@@ -8,10 +8,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 // TODO: 2021. 04. 15. create wall
 public class BoardModel {
-    // square board..
+    /** square board.. */
     private IntegerProperty size = new SimpleIntegerProperty();
-    private int obstacleSize = 25;
     private BooleanProperty boundary = new SimpleBooleanProperty();
+    /** obstacles' and snake BodyParts' size in pixel */
+    private final int blockSize = 25;
 
     public BoardModel() { }
 
@@ -32,14 +33,6 @@ public class BoardModel {
         this.size.set(size);
     }
 
-    public int getObstacleSize() {
-        return obstacleSize;
-    }
-
-    public void setObstacleSize(int obstacleSize) {
-        this.obstacleSize = obstacleSize;
-    }
-
     public boolean isBoundary() {
         return boundary.get();
     }
@@ -50,5 +43,14 @@ public class BoardModel {
 
     public void setBoundary(boolean boundary) {
         this.boundary.set(boundary);
+    }
+
+    public int getSizePx() {
+        System.out.println(size.get() + " " + blockSize);
+        return size.get() * blockSize;
+    }
+
+    public int getBlockSize() {
+        return blockSize;
     }
 }

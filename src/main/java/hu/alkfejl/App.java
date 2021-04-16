@@ -17,11 +17,11 @@ public class App extends Application {
 
     public App() {
         // TODO: 2021. 04. 16. értelmes starting position a kígyóknak
-        SnakeModel snake1 = new SnakeModel(new Position(1, 1), 0, Color.BLACK, SnakeModel.Direction.DOWN);
-        SnakeModel snake2 = new SnakeModel(new Position(9, 1), 0, Color.BLACK, SnakeModel.Direction.DOWN);
+        SnakeModel snake1 = new SnakeModel(new Position(1, 1), 0, Color.LIGHTGREEN, SnakeModel.Direction.DOWN);
+        SnakeModel snake2 = new SnakeModel(new Position(9, 1), 0, Color.GREEN, SnakeModel.Direction.DOWN);
         PlayerModel player1 = new PlayerModel(snake1, 0);
         PlayerModel player2 = new PlayerModel(snake2, 0);
-        BoardModel board = new BoardModel(10, false);
+        BoardModel board = new BoardModel(30, false);
         gameModel = new GameModel(player1, player2, board);
     }
 
@@ -32,7 +32,7 @@ public class App extends Application {
 
         // get fxmlLoader for starting scene
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("starting.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
+        Scene scene = new Scene(fxmlLoader.load(), gameModel.getBoard().getSizePx(), gameModel.getBoard().getSizePx());
         BaseController bc = fxmlLoader.getController();
         // set sceneManager for startingController
         bc.setSceneManager(sceneManager);

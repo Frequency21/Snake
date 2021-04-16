@@ -15,6 +15,10 @@ public abstract class BaseController {
         this.gameModel = gameModel;
     }
 
-    // called after fxml loads inside SceneManager switchScene method..
+    // called after fxml loads for the first time =inside SceneManager switchScene method..)
+    // bind gameModels property to FXML injected fields inside this (and initialize controller's values)
     abstract public void init();
+
+    // called on every scene switch
+    abstract public void onSwitch();
 }

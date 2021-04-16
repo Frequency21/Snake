@@ -36,4 +36,9 @@ public class StartingController extends BaseController {
     public void init() {
 
     }
+
+    @Override
+    public void onSwitch() {
+
+    }
 }

@@ -1,6 +1,7 @@
 package hu.alkfejl.controller;
 
 import hu.alkfejl.model.GameModel;
+import hu.alkfejl.model.Tuple;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -24,10 +25,12 @@ public class SceneManager {
         this.gameModel = gameModel;
     }
 
-    private final Map<String, Scene> scenes = new HashMap<>();
+    // hold reference both to Scene and its controller (onSwitch and init callbacks)
+    private final Map<String, Tuple<Scene, BaseController>> scenes = new HashMap<>();
 
+    // scene size will match board size
     public void switchScene(String url) {
-        Scene scene = scenes.computeIfAbsent(url, u -> {
+        Tuple<Scene, BaseController> tuple = scenes.computeIfAbsent(url, u -> {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(u));
             try {
                 Pane p = loader.load();
@@ -35,17 +38,18 @@ public class SceneManager {
                 controller.setSceneManager(this);
                 controller.setGameModel(gameModel);
                 controller.init();
-                return new Scene(p);
+                return new Tuple<>(new Scene(p, gameModel.getBoard().getSizePx(), gameModel.getBoard().getSizePx()), controller);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
-        rootStage.setScene(scene);
+        tuple.getSecond().onSwitch();
+        rootStage.setScene(tuple.getFirst());
     }
 
 
     public void switchScene(String url, int width, int height) {
-        Scene scene = scenes.computeIfAbsent(url, u -> {
+        Tuple<Scene, BaseController> tuple = scenes.computeIfAbsent(url, u -> {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(u));
             try {
                 Pane p = loader.load();
@@ -53,11 +57,16 @@ public class SceneManager {
                 controller.setSceneManager(this);
                 controller.setGameModel(gameModel);
                 controller.init();
-                return new Scene(p, width, height);
+                return new Tuple<>(new Scene(p, width, height), controller);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
-        rootStage.setScene(scene);
+        tuple.getSecond().onSwitch();
+        rootStage.setScene(tuple.getFirst());
+    }
+
+    public Stage getRootStage() {
+        return rootStage;
     }
 }

@@ -6,12 +6,15 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 
 
+// TODO: 2021. 04. 16. refactor foodColor for every type..
 public class SettingsController extends BaseController {
 
     @FXML
     private ColorPicker foodColorCP;
     @FXML
-    private ColorPicker snakeColorCP;
+    private ColorPicker snake1ColorCP;
+    @FXML
+    private ColorPicker snake2ColorCP;
     @FXML
     private Spinner<Integer> snakeSpeedSp;
     @FXML
@@ -23,15 +26,25 @@ public class SettingsController extends BaseController {
 
     @Override
     public void init() {
-        if (initialized) return;
-        initialized = true;
-        // DO NOT rebind every properties on every SwitchScene call..
         setControllers();
-        gameModel.getPlayer1().getSnake().colorProperty().bindBidirectional(snakeColorCP.valueProperty());
-        gameModel.getPlayer2().getSnake().colorProperty().bindBidirectional(snakeColorCP.valueProperty());
+        gameModel.getPlayer1().getSnake().colorProperty().bindBidirectional(snake1ColorCP.valueProperty());
+        gameModel.getPlayer2().getSnake().colorProperty().bindBidirectional(snake2ColorCP.valueProperty());
         gameModel.getBoard().boundaryProperty().bindBidirectional(boundaryCB.selectedProperty());
+        // if board size changes then resize and move stage
+        boardSizeSp.valueProperty().addListener((obs, oldValue, newValue) -> {
+            int size = gameModel.getBoard().getBlockSize();
+            sceneManager.getRootStage().setWidth(newValue * size);
+            sceneManager.getRootStage().setHeight(newValue * size);
+            sceneManager.getRootStage().setX(
+                    sceneManager.getRootStage().getX() + (oldValue - newValue) * size / 2.0);
+            sceneManager.getRootStage().setY(
+                    sceneManager.getRootStage().getY() + (oldValue - newValue) * size / 2.0);
+        });
         // TODO: 2021. 04. 16. set food color property (there are no fruits in the game yet)..
     }
+
+    @Override
+    public void onSwitch() { }
 
     @FXML
     private void goBack(ActionEvent actionEvent) {
@@ -40,8 +53,9 @@ public class SettingsController extends BaseController {
 
     private void setControllers() {
         snakeSpeedSp.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1, 1));
-        boardSizeSp.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(10, 20, 10, 1));
-        snakeColorCP.setValue(Color.LIGHTGREEN);
+        boardSizeSp.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(30, 40, 30, 1));
+        snake1ColorCP.setValue(Color.LIGHTGREEN);
+        snake2ColorCP.setValue(Color.GREEN);
         boundaryCB.setSelected(true);
     }
 }
