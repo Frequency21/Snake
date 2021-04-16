@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,11 @@ public class CanvasController extends BaseController {
     private Canvas canvas;
     private GraphicsContext gc;
     private List<FruitModel> fruits = new ArrayList<>();
+    private int blockSize;
 
     public void drawRectangle(ActionEvent actionEvent) {
-        gc.setFill(gameModel.getPlayer1().getSnake().getColor());
-        gc.fillRect(0, 0, 600, 400);
         drawFruits(fruits);
+        drawGrid();
     }
 
     public void keyPressed(KeyEvent keyEvent) {
@@ -44,18 +45,20 @@ public class CanvasController extends BaseController {
 
     @Override
     public void init() {
+        // set canvas size to fit stage size
+        blockSize = gameModel.getBoard().getBlockSize();
+        canvas.heightProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
+        canvas.widthProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
         gc = canvas.getGraphicsContext2D();
-        gc.setLineWidth(1);
         for (var type : FruitType.values()) fruits.add(new FruitModel(type));
     }
 
     void drawFruits(List<FruitModel> fruits) {
         Position init = new Position(0, 50);
-        int size = 20;
-        int offset = 50;
+        int size = blockSize;
+        int offset = 2 * blockSize;
         int i = 0;
         for (var fruit: fruits) {
-            System.out.println(fruit);
             gc.setFill(fruit.getColor());
             gc.fillOval(init.getX() + i * offset, init.getY(), size, size);
             ++i;
@@ -63,11 +66,18 @@ public class CanvasController extends BaseController {
     }
 
     void drawGrid() {
-
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, gameModel.getBoard().getSizePx(), gameModel.getBoard().getSizePx());
+        gc.setStroke(Color.LIGHTGRAY);
+        gc.setLineWidth(0.5);
+        for (int i = 0; i < gameModel.getBoard().getSize(); i++) {
+            gc.strokeLine(i * blockSize, 0, i * blockSize, canvas.getWidth());
+            gc.strokeLine(0, i * blockSize, canvas.getHeight(), i * blockSize);
+        }
     }
 
     @Override
     public void onSwitch() {
-
+        drawGrid();
     }
 }

@@ -46,7 +46,6 @@ public class BoardModel {
     }
 
     public int getSizePx() {
-        System.out.println(size.get() + " " + blockSize);
         return size.get() * blockSize;
     }
 

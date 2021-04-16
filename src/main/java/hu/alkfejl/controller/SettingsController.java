@@ -33,13 +33,17 @@ public class SettingsController extends BaseController {
         // if board size changes then resize and move stage
         boardSizeSp.valueProperty().addListener((obs, oldValue, newValue) -> {
             int size = gameModel.getBoard().getBlockSize();
-            sceneManager.getRootStage().setWidth(newValue * size);
-            sceneManager.getRootStage().setHeight(newValue * size);
+            int diff = newValue - oldValue;
+            double stageSizeX = sceneManager.getRootStage().getWidth();
+            double stageSizeY = sceneManager.getRootStage().getHeight();
+            sceneManager.getRootStage().setWidth(stageSizeX + diff * size);
+            sceneManager.getRootStage().setHeight(stageSizeY + diff * size);
             sceneManager.getRootStage().setX(
-                    sceneManager.getRootStage().getX() + (oldValue - newValue) * size / 2.0);
+                    sceneManager.getRootStage().getX() - diff * size / 2.0);
             sceneManager.getRootStage().setY(
-                    sceneManager.getRootStage().getY() + (oldValue - newValue) * size / 2.0);
+                    sceneManager.getRootStage().getY() - diff * size / 2.0);
         });
+        gameModel.getBoard().sizeProperty().bind(boardSizeSp.valueProperty());
         // TODO: 2021. 04. 16. set food color property (there are no fruits in the game yet)..
     }
 
