@@ -15,9 +15,8 @@ public class BoardModel {
 
     public BoardModel() { }
 
-    public BoardModel(int size, int obstacleSize, boolean boundary) {
+    public BoardModel(int size, boolean boundary) {
         this.size.set(size);
-        this.obstacleSize = obstacleSize;
         this.boundary.set(boundary);
     }
 

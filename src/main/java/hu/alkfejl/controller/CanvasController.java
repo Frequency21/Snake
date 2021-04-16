@@ -2,16 +2,12 @@ package hu.alkfejl.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
-public class CanvasController extends BaseController implements Initializable {
+public class CanvasController extends BaseController {
 
     @FXML
     private Canvas canvas;
@@ -22,16 +18,8 @@ public class CanvasController extends BaseController implements Initializable {
     private GraphicsContext gc;
 
     public void drawRectangle(ActionEvent actionEvent) {
-        gc.setStroke(Color.BLACK);
-        gc.setFill(Color.BLACK);
+        gc.setFill(gameModel.getPlayer1().getSnake().getColor());
         gc.fillRect(0, 0, 600, 400);
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        gc = canvas.getGraphicsContext2D();
-        gc.setLineWidth(1);
-
     }
 
     public void keyPressed(KeyEvent keyEvent) {
@@ -46,5 +34,11 @@ public class CanvasController extends BaseController implements Initializable {
         // TODO: 2021. 04. 15. set game status to end
         // TODO: 2021. 04. 15. save scores to db
         sceneManager.switchScene("../starting.fxml");
+    }
+
+    @Override
+    public void init() {
+        gc = canvas.getGraphicsContext2D();
+        gc.setLineWidth(1);
     }
 }

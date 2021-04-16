@@ -32,4 +32,8 @@ public class StartingController extends BaseController {
 
     }
 
+    @Override
+    public void init() {
+
+    }
 }

@@ -6,21 +6,22 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 // rendering will be inside GameController's game loop
-// TODO: 2021. 04. 15. ez így biztos jó?
-//  kell-e gamestatus, vagy elég a boolean?
 public class GameModel {
     private ObjectProperty<PlayerModel> player1 = new SimpleObjectProperty<>();
     private ObjectProperty<PlayerModel> player2 = new SimpleObjectProperty<>();
     private ObjectProperty<BoardModel> board = new SimpleObjectProperty<>();
-    private BooleanProperty status = new SimpleBooleanProperty();
+    private ObjectProperty<GameStatus> status = new SimpleObjectProperty<>(GameStatus.INITIAL);
 
     public GameModel() { }
 
-    public GameModel(PlayerModel player1, PlayerModel player2, BoardModel board, boolean status) {
+    public GameModel(PlayerModel player1, PlayerModel player2, BoardModel board) {
         this.player1.set(player1);
         this.player2.set(player2);
         this.board.set(board);
-        this.status .set(status);
+    }
+
+    public enum GameStatus {
+        INITIAL, STOPPED, RUNNING, OVER
     }
 
     public PlayerModel getPlayer1() {
@@ -59,15 +60,15 @@ public class GameModel {
         this.board.set(board);
     }
 
-    public boolean isStatus() {
+    public GameStatus getStatus() {
         return status.get();
     }
 
-    public BooleanProperty statusProperty() {
+    public ObjectProperty<GameStatus> statusProperty() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(GameStatus status) {
         this.status.set(status);
     }
 }
