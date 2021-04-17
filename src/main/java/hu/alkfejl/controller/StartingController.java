@@ -25,11 +25,13 @@ public class StartingController extends BaseController {
     }
 
     public void playerOne(ActionEvent actionEvent) {
+        gameModel.setMultiPlayer(false);
         sceneManager.switchScene("../canvas.fxml");
     }
 
     public void playerTwo(ActionEvent actionEvent) {
-
+        gameModel.setMultiPlayer(true);
+        sceneManager.switchScene("../canvas.fxml");
     }
 
     @Override

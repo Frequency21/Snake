@@ -6,21 +6,27 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SnakeModel {
-    private ObjectProperty<PlayerModel> owner = new SimpleObjectProperty<>();
-    private IntegerProperty speed = new SimpleIntegerProperty();
-    private ObjectProperty<Color> color = new SimpleObjectProperty<>();
+    private final ObjectProperty<PlayerModel> owner = new SimpleObjectProperty<>();
+    private final IntegerProperty speed = new SimpleIntegerProperty();
+    private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
     private Direction direction;
-    // body[0] = head
-    private final List<BodyPart> body = new ArrayList<>();
+    private final List<BodyPart> body = new LinkedList<>();
+    private BodyPart head;
 
-    public SnakeModel() { }
+    public SnakeModel() {
+        head = new BodyPart(new Position(1, 1));
+        body.add(head);
+        direction = Direction.DOWN;
+        speed.set(1);
+    }
 
     public SnakeModel(Position position, int speed, Color color, Direction direction) {
-        body.add(new BodyPart(position));
+        head = new BodyPart(position);
+        body.add(head);
         this.speed.set(speed);
         this.color.set(color);
         this.direction = direction;
@@ -31,7 +37,32 @@ public class SnakeModel {
     }
 
     public void move() {
-        // TODO: 2021. 04. 15.
+        // remove tail, then insert to neck with position of head
+        BodyPart tail = body.get(body.size() - 1);
+        tail.position.copy(head.position);
+        body.remove(body.size() - 1);
+        if (body.size() > 1)
+            body.add(1, tail);
+        else {
+            body.add(0, tail);
+            head = body.get(0);
+        }
+
+        // then move head
+        switch (direction) {
+            case UP:
+                head.getPosition().decY();
+                break;
+            case RIGHT:
+                head.getPosition().incX();
+                break;
+            case DOWN:
+                head.getPosition().incY();
+                break;
+            case LEFT:
+                head.getPosition().decX();
+                break;
+        }
     }
 
     public static class BodyPart {

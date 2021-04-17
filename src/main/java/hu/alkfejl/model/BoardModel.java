@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-// TODO: 2021. 04. 15. create wall
+/**
+ * simple board with cells <-- positions are integers
+ */
 public class BoardModel {
     /** square board.. */
     private final IntegerProperty size = new SimpleIntegerProperty();
@@ -15,16 +17,17 @@ public class BoardModel {
     private final ObjectProperty<List<FruitModel>> fruits = new SimpleObjectProperty<>(new ArrayList<>());
     private final ObjectProperty<SnakeModel> snake1 = new SimpleObjectProperty<>();
     private final ObjectProperty<SnakeModel> snake2 = new SimpleObjectProperty<>();
-    /** obstacles' and snake BodyParts' size in pixel */
-    private final int blockSize = 25;
 
     public BoardModel() { }
 
     public BoardModel(int size, boolean boundary) {
         this.size.set(size);
         this.boundary.set(boundary);
-        this.setSnake1(new SnakeModel(new Position(1, 1), 0, Color.LIGHTGREEN, SnakeModel.Direction.DOWN));
-        this.setSnake2(new SnakeModel(new Position(29, 1), 0, Color.GREEN, SnakeModel.Direction.DOWN));
+        this.setSnake1(new SnakeModel(new Position(1, 1), 1, Color.LIGHTGREEN, SnakeModel.Direction.DOWN));
+        this.setSnake2(new SnakeModel(new Position(1, 3), 1, Color.GREEN, SnakeModel.Direction.DOWN));
+        // TODO: 2021. 04. 19. remove this later
+        snake1.get().getBody().add(new SnakeModel.BodyPart(new Position(0, 1)));
+        snake1.get().getBody().add(new SnakeModel.BodyPart(new Position(-1, 1)));
     }
 
     public int getSize() {
@@ -87,11 +90,4 @@ public class BoardModel {
         this.snake2.set(snake2);
     }
 
-    public int getSizePx() {
-        return size.get() * blockSize;
-    }
-
-    public int getBlockSize() {
-        return blockSize;
-    }
 }

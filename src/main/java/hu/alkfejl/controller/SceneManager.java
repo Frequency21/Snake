@@ -38,7 +38,7 @@ public class SceneManager {
                 controller.setSceneManager(this);
                 controller.setGameModel(gameModel);
                 controller.init();
-                return new Tuple<>(new Scene(p, gameModel.getBoard().getSizePx(), gameModel.getBoard().getSizePx()), controller);
+                return new Tuple<>(new Scene(p, gameModel.getSizePx(), gameModel.getSizePx()), controller);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

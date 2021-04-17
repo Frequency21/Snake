@@ -2,6 +2,10 @@ package hu.alkfejl.model;
 
 import java.util.Objects;
 
+/**
+ * Stores object position on the board
+ * [0..Board.size)
+ */
 public class Position {
     private int x;
     private int y;
@@ -29,6 +33,62 @@ public class Position {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public Position incX() {
+        ++x;
+        return this;
+    }
+
+    public Position incY() {
+        ++y;
+        return this;
+    }
+
+    public Position decX() {
+        --x;
+        return this;
+    }
+
+    public Position decY() {
+        --y;
+        return this;
+    }
+
+    public Position incX(int with) {
+        x += with;
+        return this;
+    }
+
+    public Position incY(int with) {
+        y += with;
+        return this;
+    }
+
+    public Position decX(int with) {
+        x -= with;
+        return this;
+    }
+
+    public Position decY(int with) {
+        y -= with;
+        return this;
+    }
+
+    public Position copy(Position other) {
+        if (other != this) {
+            x = other.getX();
+            y = other.getY();
+        }
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 
     @Override

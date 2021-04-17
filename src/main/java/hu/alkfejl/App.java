@@ -2,7 +2,9 @@ package hu.alkfejl;
 
 import hu.alkfejl.controller.BaseController;
 import hu.alkfejl.controller.SceneManager;
-import hu.alkfejl.model.*;
+import hu.alkfejl.model.BoardModel;
+import hu.alkfejl.model.GameModel;
+import hu.alkfejl.model.PlayerModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -31,7 +33,7 @@ public class App extends Application {
 
         // get fxmlLoader for starting scene
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("starting.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), gameModel.getBoard().getSizePx(), gameModel.getBoard().getSizePx());
+        Scene scene = new Scene(fxmlLoader.load(), gameModel.getSizePx(), gameModel.getSizePx());
         BaseController bc = fxmlLoader.getController();
         // set sceneManager for startingController
         bc.setSceneManager(sceneManager);

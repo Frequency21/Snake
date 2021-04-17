@@ -32,7 +32,7 @@ public class SettingsController extends BaseController {
         gameModel.getBoard().boundaryProperty().bindBidirectional(boundaryCB.selectedProperty());
         // if board size changes then resize and move stage
         boardSizeSp.valueProperty().addListener((obs, oldValue, newValue) -> {
-            int size = gameModel.getBoard().getBlockSize();
+            int size = gameModel.getBlockSize();
             int diff = newValue - oldValue;
             double stageSizeX = sceneManager.getRootStage().getWidth();
             double stageSizeY = sceneManager.getRootStage().getHeight();

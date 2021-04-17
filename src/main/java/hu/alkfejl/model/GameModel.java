@@ -9,11 +9,12 @@ import java.util.Random;
 
 // rendering will be inside CanvasController's game loop
 public class GameModel {
-    private ObjectProperty<PlayerModel> player1 = new SimpleObjectProperty<>();
-    private ObjectProperty<PlayerModel> player2 = new SimpleObjectProperty<>();
-    private ObjectProperty<BoardModel> board = new SimpleObjectProperty<>();
-    private ObjectProperty<GameStatus> status = new SimpleObjectProperty<>(GameStatus.INITIAL);
-    private BooleanProperty multiPlayer = new SimpleBooleanProperty();
+    private final ObjectProperty<PlayerModel> player1 = new SimpleObjectProperty<>();
+    private final ObjectProperty<PlayerModel> player2 = new SimpleObjectProperty<>();
+    private final ObjectProperty<BoardModel> board = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameStatus> status = new SimpleObjectProperty<>(GameStatus.INITIAL);
+    private final BooleanProperty multiPlayer = new SimpleBooleanProperty();
+    private final int blockSize = 25;
     private final Random rand = new Random();
 
     public GameModel() { }
@@ -88,10 +89,19 @@ public class GameModel {
         this.multiPlayer.set(multiPlayer);
     }
 
-    // TODO: 2021. 04. 17. it does NOT detect when board is full --> fall in infinity loop
-    public FruitModel generateFruit(FruitType type) {
+    public int getSizePx() {
+        return board.get().getSize() * blockSize;
+    }
+
+    public int getBlockSize() {
+        return blockSize;
+    }
+
+    public FruitModel generateFruit(FruitType type) throws Exception {
         Position randPos;
+        int trials = 0;
         do {
+            ++trials;
             Position position = randomPosition(getBoard().getSize());
             // if there's boundary
             if (getBoard().isBoundary()) {
@@ -110,6 +120,18 @@ public class GameModel {
                 if (getBoard().getSnake2().getBody().stream().anyMatch(bodyPart -> bodyPart.getPosition().equals(position))) {
                     continue;
                 }
+            }
+            // if there's too much trials, then check is board full
+            if (trials >= 100) {
+                trials = 0;
+                int reservedSpace = 0;
+                reservedSpace += getBoard().getSnake1().getBody().size();
+                if (multiPlayer.get()) reservedSpace += getBoard().getSnake2().getBody().size();
+                reservedSpace += getBoard().getFruits().size() + 1;
+                if (getBoard().isBoundary()) reservedSpace += getBoard().getSize() * 4 - 4;
+                if (reservedSpace == getBoard().getSize() * getBoard().getSize())
+                    throw new Exception("Board is full");
+                continue;
             }
             randPos = position;
             break;
