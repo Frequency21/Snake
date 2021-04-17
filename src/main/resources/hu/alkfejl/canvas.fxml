@@ -9,6 +9,6 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.alkfejl.controller.CanvasController">
    <children>
       <Canvas fx:id="canvas" height="400.0" width="600.0" />
-      <Button mnemonicParsing="false" onAction="#drawRectangle" text="draw rectangle" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="555.0" />
+      <Button mnemonicParsing="false" text="draw rectangle" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="555.0" />
    </children>
 </AnchorPane>

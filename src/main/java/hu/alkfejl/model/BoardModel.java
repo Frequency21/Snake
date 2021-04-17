@@ -10,9 +10,9 @@ import java.util.List;
 // TODO: 2021. 04. 15. create wall
 public class BoardModel {
     /** square board.. */
-    private IntegerProperty size = new SimpleIntegerProperty();
-    private BooleanProperty boundary = new SimpleBooleanProperty();
-    private ObjectProperty<List<FruitModel>> fruits = new SimpleObjectProperty<>();
+    private final IntegerProperty size = new SimpleIntegerProperty();
+    private final BooleanProperty boundary = new SimpleBooleanProperty();
+    private final ObjectProperty<List<FruitModel>> fruits = new SimpleObjectProperty<>(new ArrayList<>());
     private final ObjectProperty<SnakeModel> snake1 = new SimpleObjectProperty<>();
     private final ObjectProperty<SnakeModel> snake2 = new SimpleObjectProperty<>();
     /** obstacles' and snake BodyParts' size in pixel */
@@ -23,9 +23,8 @@ public class BoardModel {
     public BoardModel(int size, boolean boundary) {
         this.size.set(size);
         this.boundary.set(boundary);
-        this.fruits.set(new ArrayList<>());
         this.setSnake1(new SnakeModel(new Position(1, 1), 0, Color.LIGHTGREEN, SnakeModel.Direction.DOWN));
-        this.setSnake2(new SnakeModel(new Position(9, 1), 0, Color.GREEN, SnakeModel.Direction.DOWN));
+        this.setSnake2(new SnakeModel(new Position(29, 1), 0, Color.GREEN, SnakeModel.Direction.DOWN));
     }
 
     public int getSize() {

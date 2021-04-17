@@ -34,7 +34,7 @@ public class SnakeModel {
         // TODO: 2021. 04. 15.
     }
 
-    public class BodyPart {
+    public static class BodyPart {
         private Position position;
 
         public BodyPart(Position position) {

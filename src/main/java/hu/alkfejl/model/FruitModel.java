@@ -7,11 +7,17 @@ import javafx.scene.paint.Color;
 
 public class FruitModel {
     private final ObjectProperty<FruitType> type = new SimpleObjectProperty<>();
+    private final ObjectProperty<Position> position = new SimpleObjectProperty<>();
 
     public FruitModel() { }
 
     public FruitModel(FruitType type) {
         this.type.set(type);
+    }
+
+    public FruitModel(FruitType type, Position position) {
+        this.type.set(type);
+        this.setPosition(position);
     }
 
     public Color getColor() {
@@ -40,5 +46,17 @@ public class FruitModel {
 
     public void setType(FruitType type) {
         this.type.set(type);
+    }
+
+    public Position getPosition() {
+        return position.get();
+    }
+
+    public ObjectProperty<Position> positionProperty() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position.set(position);
     }
 }

@@ -4,6 +4,8 @@ import hu.alkfejl.model.FruitModel;
 import hu.alkfejl.model.FruitType;
 import hu.alkfejl.model.GameModel;
 import hu.alkfejl.model.Position;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -11,6 +13,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 import java.util.List;
 
@@ -46,8 +49,26 @@ public class CanvasController extends BaseController {
         canvas.heightProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
         canvas.widthProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
         // bind fruits
-        gameModel.getBoard().fruitsProperty().bindBidirectional(fruits);
+        fruits.bindBidirectional(gameModel.getBoard().fruitsProperty());
+        Timeline fiveSecondsWonder = new Timeline(
+                new KeyFrame(Duration.seconds(0.05),
+                        event -> drawGame()));
+        fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
+        fiveSecondsWonder.play();
         gc = canvas.getGraphicsContext2D();
+    }
+
+    private void drawGame() {
+        drawGrid();
+        gameModel.generateFruit(FruitType.COMMON);
+        for (var fruit: fruits.get()) {
+            drawFruit(fruit);
+        }
+    }
+
+    private void drawFruit(FruitModel fruit) {
+        gc.setFill(fruit.getColor());
+        gc.fillOval(fruit.getPosition().getX() * blockSize, fruit.getPosition().getY() * blockSize, blockSize, blockSize);
     }
 
     void drawFruits(List<FruitModel> fruits) {
