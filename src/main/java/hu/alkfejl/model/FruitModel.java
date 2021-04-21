@@ -20,6 +20,19 @@ public class FruitModel {
         this.setPosition(position);
     }
 
+    public static FruitType randomFruit() {
+        int randInt = (int) (Math.random() * 100);
+        int sum = 0;
+        for (var fruitType: FruitType.values()) {
+            sum += fruitType.getChance();
+            if (randInt < sum) {
+                return fruitType;
+            }
+        }
+        // should never get there
+        return null;
+    }
+
     public Color getColor() {
         return type.get().getColor();
     }

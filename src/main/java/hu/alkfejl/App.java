@@ -6,6 +6,7 @@ import hu.alkfejl.model.BoardModel;
 import hu.alkfejl.model.GameModel;
 import hu.alkfejl.model.PlayerModel;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -14,7 +15,7 @@ import java.io.IOException;
 
 
 public class App extends Application {
-    private GameModel gameModel;
+    private final GameModel gameModel;
 
     public App() {
         // setup game models
@@ -41,6 +42,10 @@ public class App extends Application {
 
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.onCloseRequestProperty().set(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
         stage.show();
     }
 

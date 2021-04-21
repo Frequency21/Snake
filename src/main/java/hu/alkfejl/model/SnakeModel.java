@@ -53,7 +53,7 @@ public class SnakeModel {
         UP, RIGHT, DOWN, LEFT
     }
 
-    public void move() {
+    void move() {
         // remove tail, then insert to neck with position of head
         BodyPart tail = body.get(body.size() - 1);
         tail.position.copy(head.position);
@@ -148,8 +148,13 @@ public class SnakeModel {
         this.owner.set(owner);
     }
 
+    public BodyPart getHead() {
+        return head;
     }
 
+    public void increase() {
+        BodyPart bp = new BodyPart(new Position(head.getPosition()));
+        body.add(bp);
     }
 
     // TODO: 2021. 04. 21. uniq timer for slowing effect duration would be nice.. (for the GUI)

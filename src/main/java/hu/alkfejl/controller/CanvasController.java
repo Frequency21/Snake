@@ -76,6 +76,13 @@ public class CanvasController extends BaseController {
         canvas.heightProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
         canvas.widthProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
         gc = canvas.getGraphicsContext2D();
+        try {
+            gameModel.generateFruit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        snake1.setSpeed(5);
 
         // simple timer
         timer = new AnimationTimer() {
@@ -92,11 +99,11 @@ public class CanvasController extends BaseController {
                 }
                 if (now - last1 > 1e9 / snake1.getSpeed()) {
                     last1 = now;
-                    snake1.move();
+                    gameModel.move(snake1);
                 }
                 if (gameModel.isMultiPlayer() && now - last2 > 1e9 / snake2.getSpeed()) {
                     last2 = now;
-                    snake2.move();
+                    gameModel.move(snake2);
                 }
                 tick(gc);
             }
@@ -107,12 +114,13 @@ public class CanvasController extends BaseController {
         // draw grid
         draw(gc);
 
-        // draw snakes
-        draw(gc, snake1);
-        draw(gc, snake2);
-
         // draw fruits
         draw(gc, fruits.get());
+
+        // draw snakes
+        draw(gc, snake1);
+        if (gameModel.isMultiPlayer())
+            draw(gc, snake2);
     }
 
     private void draw(GraphicsContext gc, SnakeModel snake) {
