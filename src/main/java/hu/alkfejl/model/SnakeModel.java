@@ -1,13 +1,13 @@
 package hu.alkfejl.model;
 
+import javafx.animation.AnimationTimer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class SnakeModel {
     private final ObjectProperty<PlayerModel> owner = new SimpleObjectProperty<>();
@@ -16,6 +16,9 @@ public class SnakeModel {
     private Direction direction;
     private final List<BodyPart> body = new LinkedList<>();
     private BodyPart head;
+    /** set slowing effect duration */
+    private SlowingTimer timer = new SlowingTimer(5);
+
 
     public SnakeModel() {
         head = new BodyPart(new Position(1, 1));
@@ -30,6 +33,20 @@ public class SnakeModel {
         this.speed.set(speed);
         this.color.set(color);
         this.direction = direction;
+    }
+
+    public void eat(FruitModel fruitModel) {
+        switch (fruitModel.getType()) {
+            case COMMON:
+                break;
+            case SLOW:
+                timer.slow();
+                break;
+            case EXTRA:
+                break;
+            case BERSERK:
+                break;
+        }
     }
 
     public enum Direction {
@@ -129,5 +146,39 @@ public class SnakeModel {
     public void setOwner(PlayerModel owner) {
         owner.setSnake(this);
         this.owner.set(owner);
+    }
+
+    }
+
+    }
+
+    // TODO: 2021. 04. 21. uniq timer for slowing effect duration would be nice.. (for the GUI)
+    /**
+     * Timer class to trace slowing effect and snake speed
+     * (slowing effect can stack, but snake's speed should never reach 0)
+     */
+    private class SlowingTimer {
+        private final Timer timer = new Timer();
+        private final SnakeModel snake = SnakeModel.this;
+        private final Vector<Integer> speeds = new Vector<>();
+        private final int seconds;
+
+        public SlowingTimer(int seconds) { this.seconds = seconds; }
+
+        public void slow() {
+            int speed = snake.getSpeed();
+            speeds.add(speed);
+            timer.schedule(new SlowTimerTask(), seconds * 1000L);
+            snake.setSpeed(speed > 1 ? speed / 2 : 1);
+        }
+
+        private class SlowTimerTask extends TimerTask {
+            @Override
+            public void run() {
+                int origSpeed = speeds.lastElement();
+                snake.setSpeed(origSpeed);
+                speeds.remove(speeds.size() - 1);
+            }
+        }
     }
 }
