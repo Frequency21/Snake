@@ -23,11 +23,16 @@ public class BoardModel {
     public BoardModel(int size, boolean boundary) {
         this.size.set(size);
         this.boundary.set(boundary);
-        this.setSnake1(new SnakeModel(new Position(1, 1), 1, Color.LIGHTGREEN, SnakeModel.Direction.DOWN));
-        this.setSnake2(new SnakeModel(new Position(1, 3), 1, Color.GREEN, SnakeModel.Direction.DOWN));
-        // TODO: 2021. 04. 19. remove this later
-        snake1.get().getBody().add(new SnakeModel.BodyPart(new Position(0, 1)));
-        snake1.get().getBody().add(new SnakeModel.BodyPart(new Position(-1, 1)));
+        reset();
+    }
+
+    void reset() {
+        this.setSnake1(new SnakeModel(new Position(2, 4), Color.LIGHTGREEN, SnakeModel.Direction.DOWN));
+        snake1.get().getBody().add(new SnakeModel.BodyPart(new Position(2, 3)));
+        snake1.get().getBody().add(new SnakeModel.BodyPart(new Position(2, 2)));
+        this.setSnake2(new SnakeModel(new Position(9, 4), Color.GREEN, SnakeModel.Direction.DOWN));
+        snake2.get().getBody().add(new SnakeModel.BodyPart(new Position(9, 3)));
+        snake2.get().getBody().add(new SnakeModel.BodyPart(new Position(9, 2)));
     }
 
     public int getSize() {

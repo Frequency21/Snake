@@ -1,6 +1,5 @@
 package hu.alkfejl.model;
 
-import javafx.animation.AnimationTimer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -14,30 +13,30 @@ public class SnakeModel {
     private final IntegerProperty speed = new SimpleIntegerProperty();
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
     private Direction direction;
+    private Direction lastDirection;
     private final List<BodyPart> body = new LinkedList<>();
     private BodyPart head;
-    /** set slowing effect duration */
-    private SlowingTimer timer = new SlowingTimer(5);
+    private final int MIN_SPEED = 1;
+    private final int MAX_SPEED = 10;
+    /**
+     * set slowing effect duration
+     */
+    private final SlowingTimer timer = new SlowingTimer(5);
 
-
-    public SnakeModel() {
-        head = new BodyPart(new Position(1, 1));
-        body.add(head);
-        direction = Direction.DOWN;
-        speed.set(1);
-    }
-
-    public SnakeModel(Position position, int speed, Color color, Direction direction) {
+    public SnakeModel(Position position, Color color, Direction direction) {
         head = new BodyPart(position);
         body.add(head);
-        this.speed.set(speed);
+        this.speed.set(MIN_SPEED);
         this.color.set(color);
-        this.direction = direction;
+        lastDirection = this.direction = direction;
     }
 
     public void eat(FruitModel fruitModel) {
         switch (fruitModel.getType()) {
             case COMMON:
+                break;
+            case REVERSE:
+                reverse();
                 break;
             case SLOW:
                 timer.slow();
@@ -49,11 +48,48 @@ public class SnakeModel {
         }
     }
 
-    public enum Direction {
-        UP, RIGHT, DOWN, LEFT
+    private void reverse() {
+        int size = body.size();
+        if (size < 2) return;
+
+        /* determine where tail is looking */
+        BodyPart tail = body.get(size - 1);
+        BodyPart tailPrev = body.get(size - 2);
+
+        if (tail.position.getX() == tailPrev.position.getX()) {
+            if (tail.position.getY() > tailPrev.position.getY())
+                direction = lastDirection = Direction.DOWN;
+            else
+                direction = lastDirection = Direction.UP;
+        } else {
+            if (tail.position.getX() > tailPrev.getPosition().getX())
+                direction = lastDirection = Direction.RIGHT;
+            else
+                direction = lastDirection = Direction.LEFT;
+        }
+
+        for (int i = 0; i < body.size() / 2; i++) Collections.swap(body, i, size - 1 - i);
+
+        head = body.get(0);
     }
 
-    void move() {
+    public enum Direction {
+        UP, RIGHT, DOWN, LEFT;
+
+        public static boolean opposites(Direction p, Direction q) {
+            return (p.ordinal() + 2) % 4 == q.ordinal();
+        }
+    }
+
+    /**
+     * move snake according to its direction
+     *
+     * @return is it bitten itself
+     */
+    boolean move() {
+        if (!Direction.opposites(lastDirection, direction)) {
+            direction = lastDirection;
+        }
         // remove tail, then insert to neck with position of head
         BodyPart tail = body.get(body.size() - 1);
         tail.position.copy(head.position);
@@ -80,6 +116,23 @@ public class SnakeModel {
                 head.getPosition().decX();
                 break;
         }
+        /* check is it bitten itself */
+        return body.stream().skip(1).anyMatch(bp -> head.getPosition().equals(bp.getPosition()));
+    }
+
+    void accelerate() {
+        if (Direction.opposites(direction, lastDirection))
+            decreaseSpeed();
+        else
+            increaseSpeed();
+    }
+
+    private void increaseSpeed() {
+        if (speed.get() < MAX_SPEED) speed.set(speed.get() + 1);
+    }
+
+    private void decreaseSpeed() {
+        if (speed.get() > MIN_SPEED) speed.set(speed.get() - 1);
     }
 
     public static class BodyPart {
@@ -126,8 +179,9 @@ public class SnakeModel {
         return direction;
     }
 
+    /* direction will be set when move gets invoked */
     public void setDirection(Direction direction) {
-        this.direction = direction;
+        lastDirection = direction;
     }
 
     public List<BodyPart> getBody() {
@@ -158,6 +212,7 @@ public class SnakeModel {
     }
 
     // TODO: 2021. 04. 21. uniq timer for slowing effect duration would be nice.. (for the GUI)
+
     /**
      * Timer class to trace slowing effect and snake speed
      * (slowing effect can stack, but snake's speed should never reach 0)
@@ -168,13 +223,15 @@ public class SnakeModel {
         private final Vector<Integer> speeds = new Vector<>();
         private final int seconds;
 
-        public SlowingTimer(int seconds) { this.seconds = seconds; }
+        public SlowingTimer(int seconds) {
+            this.seconds = seconds;
+        }
 
         public void slow() {
             int speed = snake.getSpeed();
             speeds.add(speed);
             timer.schedule(new SlowTimerTask(), seconds * 1000L);
-            snake.setSpeed(speed > 1 ? speed / 2 : 1);
+            snake.setSpeed(speed >= 2 * MIN_SPEED ? speed / 2 : MIN_SPEED);
         }
 
         private class SlowTimerTask extends TimerTask {

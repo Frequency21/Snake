@@ -19,40 +19,64 @@ public class GameModel {
     private final int blockSize = 25;
     private final Random rand = new Random();
     // local use
-    private final SnakeModel snake1;
-    private final SnakeModel snake2;
+    private SnakeModel.Direction lastDirection;
+    private SnakeModel snake1;
+    private SnakeModel snake2;
     private final List<FruitModel> fruits;
 
     public GameModel() {
-        snake1 = board.get().getSnake1();
-        snake2 = board.get().getSnake2();
+        player1.set(new PlayerModel());
+        player2.set(new PlayerModel());
+        board.set(new BoardModel(30, false));
+        board.get().getSnake1().setOwner(player1.get());
+        board.get().getSnake2().setOwner(player2.get());
         fruits = board.get().getFruits();
     }
 
-    public GameModel(PlayerModel player1, PlayerModel player2, BoardModel board) {
-        this.player1.set(player1);
-        this.player2.set(player2);
-        this.board.set(board);
-        snake1 = board.getSnake1();
-        snake2 = board.getSnake2();
-        fruits = board.getFruits();
-    }
+    public GameStatus move(SnakeModel snake, boolean pressed) {
+        if (multiPlayer.get() && pressed) {
+            snake.accelerate();
+        }
 
-    public void move(SnakeModel snake) {
-        snake.move();
+        /* move snake and check is it bitten itself */
+        if (snake.move()) {
+            status.set(GameStatus.OVER);
+            return status.get();
+        }
+
+        Position headPos = snake.getHead().getPosition();
+        /* if snake moves out of the board or bumps into the wall */
+        if (!getBoard().isBoundary()) {
+            if (headPos.getX() == -1) headPos.setX(getBoard().getSize());
+            else if (headPos.getX() == getBoard().getSize()) headPos.setX(0);
+            else if (headPos.getY() == -1) headPos.setY(getBoard().getSize());
+            else if (headPos.getY() == getBoard().getSize()) headPos.setY(0);
+        } else {
+            if (headPos.getX() == 0 || headPos.getX() == getBoard().getSize() - 1 ||
+                    headPos.getY() == 0 || headPos.getY() == getBoard().getSize() - 1) {
+                // TODO: 2021. 04. 21. save scores to db then set it to zero
+                status.set(GameStatus.OVER);
+                return status.get();
+            }
+        }
+
+        /* find out which fruit was eaten, if any */
         Optional<FruitModel> eatenFruit = fruits.stream()
-                .filter(fruit -> fruit.getPosition().equals(snake1.getHead().getPosition()))
+                .filter(fruit -> fruit.getPosition().equals(snake.getHead().getPosition()))
                 .findFirst();
         if (eatenFruit.isPresent()) {
-            snake.increase();
             snake.eat(eatenFruit.get());
+            snake.increase();
             fruits.remove(eatenFruit.get());
             try {
                 generateFruit();
+//                if (multiPlayer.get())
+//                    generateFruit();
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
         }
+        return GameStatus.RUNNING;
     }
 
     public FruitModel generateFruit() throws Exception {
@@ -94,13 +118,23 @@ public class GameModel {
             randPos = position;
             break;
         } while (true);
-        FruitModel result = new FruitModel(FruitModel.randomFruit(), randPos);
+        FruitModel result = new FruitModel(FruitModel.randomFruitType(), randPos);
         getBoard().getFruits().add(result);
         return result;
     }
 
     private Position randomPosition(int size) {
         return new Position(rand.nextInt(size), rand.nextInt(size));
+    }
+
+    public void restart() {
+        board.get().reset();
+        snake1 = board.get().getSnake1();
+        snake2 = board.get().getSnake2();
+        player1.get().setSnake(snake1);
+        player1.get().setScore(0);
+        player2.get().setSnake(snake2);
+        player2.get().setScore(0);
     }
 
     public enum GameStatus {

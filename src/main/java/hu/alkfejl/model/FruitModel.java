@@ -20,7 +20,7 @@ public class FruitModel {
         this.setPosition(position);
     }
 
-    public static FruitType randomFruit() {
+    public static FruitType randomFruitType() {
         int randInt = (int) (Math.random() * 100);
         int sum = 0;
         for (var fruitType: FruitType.values()) {
