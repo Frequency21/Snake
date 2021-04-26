@@ -9,9 +9,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>
-            snake-desktop
-        </module>
+        <module>core</module>
+        <module>desktop</module>
     </modules>
 
     <properties>
