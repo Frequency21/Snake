@@ -10,28 +10,28 @@ import java.util.List;
 /**
  * simple board with cells <-- positions are integers
  */
-public class BoardModel {
+public class Board {
     /**
      * square board..
      */
     private final IntegerProperty size = new SimpleIntegerProperty();
     private final BooleanProperty boundary = new SimpleBooleanProperty();
-    private final ObjectProperty<List<FruitModel>> fruits = new SimpleObjectProperty<>(new ArrayList<>());
-    private final ObjectProperty<SnakeModel> snake1 = new SimpleObjectProperty<>();
-    private final ObjectProperty<SnakeModel> snake2 = new SimpleObjectProperty<>();
+    private final ObjectProperty<List<Fruit>> fruits = new SimpleObjectProperty<>(new ArrayList<>());
+    private final ObjectProperty<Snake> snake1 = new SimpleObjectProperty<>();
+    private final ObjectProperty<Snake> snake2 = new SimpleObjectProperty<>();
 
-    public BoardModel() {
+    public Board() {
     }
 
-    public BoardModel(int size, boolean boundary) {
+    public Board(int size, boolean boundary) {
         this.size.set(size);
         this.boundary.set(boundary);
-        this.setSnake1(new SnakeModel(new Position(2, 4), Color.LIGHTGREEN, SnakeModel.Direction.DOWN));
-        snake1.get().getBody().add(new SnakeModel.BodyPart(new Position(2, 3)));
-        snake1.get().getBody().add(new SnakeModel.BodyPart(new Position(2, 2)));
-        this.setSnake2(new SnakeModel(new Position(9, 4), Color.GREEN, SnakeModel.Direction.DOWN));
-        snake2.get().getBody().add(new SnakeModel.BodyPart(new Position(9, 3)));
-        snake2.get().getBody().add(new SnakeModel.BodyPart(new Position(9, 2)));
+        this.setSnake1(new Snake(new Position(2, 4), Color.LIGHTGREEN, Snake.Direction.DOWN));
+        snake1.get().getBody().add(new Snake.BodyPart(new Position(2, 3)));
+        snake1.get().getBody().add(new Snake.BodyPart(new Position(2, 2)));
+        this.setSnake2(new Snake(new Position(9, 4), Color.GREEN, Snake.Direction.DOWN));
+        snake2.get().getBody().add(new Snake.BodyPart(new Position(9, 3)));
+        snake2.get().getBody().add(new Snake.BodyPart(new Position(9, 2)));
     }
 
     void reset() {
@@ -74,39 +74,39 @@ public class BoardModel {
         this.boundary.set(boundary);
     }
 
-    public List<FruitModel> getFruits() {
+    public List<Fruit> getFruits() {
         return fruits.get();
     }
 
-    public ObjectProperty<List<FruitModel>> fruitsProperty() {
+    public ObjectProperty<List<Fruit>> fruitsProperty() {
         return fruits;
     }
 
-    public void setFruits(List<FruitModel> fruits) {
+    public void setFruits(List<Fruit> fruits) {
         this.fruits.set(fruits);
     }
 
-    public SnakeModel getSnake1() {
+    public Snake getSnake1() {
         return snake1.get();
     }
 
-    public ObjectProperty<SnakeModel> snake1Property() {
+    public ObjectProperty<Snake> snake1Property() {
         return snake1;
     }
 
-    public void setSnake1(SnakeModel snake1) {
+    public void setSnake1(Snake snake1) {
         this.snake1.set(snake1);
     }
 
-    public SnakeModel getSnake2() {
+    public Snake getSnake2() {
         return snake2.get();
     }
 
-    public ObjectProperty<SnakeModel> snake2Property() {
+    public ObjectProperty<Snake> snake2Property() {
         return snake2;
     }
 
-    public void setSnake2(SnakeModel snake2) {
+    public void setSnake2(Snake snake2) {
         this.snake2.set(snake2);
     }
 

@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 
 import java.util.*;
 
-public class SnakeModel {
+public class Snake {
     private final ObjectProperty<PlayerModel> owner = new SimpleObjectProperty<>();
     private final IntegerProperty speed = new SimpleIntegerProperty();
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
@@ -24,7 +24,7 @@ public class SnakeModel {
      */
     private final SlowingTimer timer = new SlowingTimer(5);
 
-    public SnakeModel(Position position, Color color, Direction direction) {
+    public Snake(Position position, Color color, Direction direction) {
         head = new BodyPart(position);
         body.add(head);
         this.speed.set(MIN_SPEED);
@@ -32,9 +32,9 @@ public class SnakeModel {
         lastDirection = this.direction = direction;
     }
 
-    public void eat(FruitModel fruitModel) {
+    public void eat(Fruit fruit) {
         increaseSpeed();
-        switch (fruitModel.getType()) {
+        switch (fruit.getType()) {
             case COMMON:
                 break;
             case REVERSE:
@@ -248,7 +248,7 @@ public class SnakeModel {
      */
     private class SlowingTimer {
         private final Timer timer = new Timer();
-        private final SnakeModel snake = SnakeModel.this;
+        private final Snake snake = Snake.this;
         private final Vector<Integer> speeds = new Vector<>();
         private final int seconds;
 

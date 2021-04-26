@@ -1,6 +1,6 @@
 package hu.alkfejl.controller;
 
-import hu.alkfejl.model.GameModel;
+import hu.alkfejl.model.Game;
 import hu.alkfejl.model.Tuple;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,13 +16,13 @@ public class SceneManager {
     private final Stage rootStage;
     // ATTENTION. not the best solution..
     // rootStage could change across the program lifecycle
-    // but gameModel should never
-    private final GameModel gameModel;
+    // but Game should never
+    private final Game Game;
 
-    public SceneManager(Stage rootStage, GameModel gameModel) {
+    public SceneManager(Stage rootStage, Game Game) {
         if (rootStage == null) throw new IllegalArgumentException();
         this.rootStage = rootStage;
-        this.gameModel = gameModel;
+        this.Game = Game;
     }
 
     // hold reference both to Scene and its controller (onSwitch and init callbacks)
@@ -36,9 +36,9 @@ public class SceneManager {
                 Pane p = loader.load();
                 BaseController controller = loader.getController();
                 controller.setSceneManager(this);
-                controller.setGameModel(gameModel);
+                controller.setGame(Game);
                 controller.init();
-                return new Tuple<>(new Scene(p, gameModel.getSizePx(), gameModel.getSizePx()), controller);
+                return new Tuple<>(new Scene(p, Game.getSizePx(), Game.getSizePx()), controller);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -55,7 +55,7 @@ public class SceneManager {
                 Pane p = loader.load();
                 BaseController controller = loader.getController();
                 controller.setSceneManager(this);
-                controller.setGameModel(gameModel);
+                controller.setGame(Game);
                 controller.init();
                 return new Tuple<>(new Scene(p, width, height), controller);
             } catch (IOException ex) {

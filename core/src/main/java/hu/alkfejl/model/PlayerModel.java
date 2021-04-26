@@ -6,7 +6,7 @@ import javafx.beans.property.*;
 public class PlayerModel {
     private final IntegerProperty score = new SimpleIntegerProperty();
     private final StringProperty name = new SimpleStringProperty();
-    private ObjectProperty<SnakeModel> snake = new SimpleObjectProperty<>();
+    private ObjectProperty<Snake> snake = new SimpleObjectProperty<>();
     
     public PlayerModel() { }
 
@@ -34,15 +34,15 @@ public class PlayerModel {
         this.name.set(name);
     }
 
-    public SnakeModel getSnake() {
+    public Snake getSnake() {
         return snake.get();
     }
 
-    public ObjectProperty<SnakeModel> snakeProperty() {
+    public ObjectProperty<Snake> snakeProperty() {
         return snake;
     }
 
-    public void setSnake(SnakeModel snake) {
+    public void setSnake(Snake snake) {
         this.snake.set(snake);
     }
 }

@@ -1,6 +1,7 @@
 package hu.alkfejl.controller;
 
 import hu.alkfejl.model.*;
+import hu.alkfejl.model.Game.GameStatus;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,11 +19,11 @@ public class CanvasController extends BaseController {
     @FXML
     private Canvas canvas;
     private GraphicsContext gc;
-    private final ObjectProperty<List<FruitModel>> fruits = new SimpleObjectProperty<>();
+    private final ObjectProperty<List<Fruit>> fruits = new SimpleObjectProperty<>();
     private int blockSize;
     private AnimationTimer timer;
-    private SnakeModel snake1;
-    private SnakeModel snake2;
+    private Snake snake1;
+    private Snake snake2;
     private boolean snake1Released = false;
     private boolean snake2Released = false;
 
@@ -32,35 +33,35 @@ public class CanvasController extends BaseController {
                 stopped();
                 break;
             case W:
-                snake1.setDirection(SnakeModel.Direction.UP);
+                snake1.setDirection(Snake.Direction.UP);
                 snake1Released = false;
                 break;
             case D:
-                snake1.setDirection(SnakeModel.Direction.RIGHT);
+                snake1.setDirection(Snake.Direction.RIGHT);
                 snake1Released = false;
                 break;
             case S:
-                snake1.setDirection(SnakeModel.Direction.DOWN);
+                snake1.setDirection(Snake.Direction.DOWN);
                 snake1Released = false;
                 break;
             case A:
-                snake1.setDirection(SnakeModel.Direction.LEFT);
+                snake1.setDirection(Snake.Direction.LEFT);
                 snake1Released = false;
                 break;
             case UP:
-                snake2.setDirection(SnakeModel.Direction.UP);
+                snake2.setDirection(Snake.Direction.UP);
                 snake2Released = false;
                 break;
             case RIGHT:
-                snake2.setDirection(SnakeModel.Direction.RIGHT);
+                snake2.setDirection(Snake.Direction.RIGHT);
                 snake2Released = false;
                 break;
             case DOWN:
-                snake2.setDirection(SnakeModel.Direction.DOWN);
+                snake2.setDirection(Snake.Direction.DOWN);
                 snake2Released = false;
                 break;
             case LEFT:
-                snake2.setDirection(SnakeModel.Direction.LEFT);
+                snake2.setDirection(Snake.Direction.LEFT);
                 snake2Released = false;
                 break;
         }
@@ -86,30 +87,30 @@ public class CanvasController extends BaseController {
     private void stopped() {
         // TODO: 2021. 04. 15. save scores to db
         timer.stop();
-        gameModel.setStatus(GameModel.GameStatus.STOPPED);
+        game.setStatus(GameStatus.STOPPED);
         sceneManager.switchScene("../starting.fxml");
     }
 
     private void exit() {
         timer.stop();
-        gameModel.setStatus(GameModel.GameStatus.OVER);
+        game.setStatus(GameStatus.OVER);
         sceneManager.switchScene("../starting.fxml");
     }
 
     @Override
     public void init() {
         // initialize fields
-        blockSize = gameModel.getBlockSize();
-        snake1 = gameModel.getBoard().getSnake1();
-        snake2 = gameModel.getBoard().getSnake2();
-        fruits.bindBidirectional(gameModel.getBoard().fruitsProperty());
+        blockSize = game.getBlockSize();
+        snake1 = game.getBoard().getSnake1();
+        snake2 = game.getBoard().getSnake2();
+        fruits.bindBidirectional(game.getBoard().fruitsProperty());
 
         // set canvas size to fit stage size
-        canvas.heightProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
-        canvas.widthProperty().bind(gameModel.getBoard().sizeProperty().multiply(blockSize));
+        canvas.heightProperty().bind(game.getBoard().sizeProperty().multiply(blockSize));
+        canvas.widthProperty().bind(game.getBoard().sizeProperty().multiply(blockSize));
         gc = canvas.getGraphicsContext2D();
         try {
-            gameModel.generateFruit();
+            game.generateFruit();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,7 +130,7 @@ public class CanvasController extends BaseController {
                 }
                 if (now - last1 > 1e9 / snake1.getSpeed()) {
                     last1 = now;
-                    if (gameModel.move(snake1, !snake1Released) == GameModel.GameStatus.OVER) {
+                    if (game.move(snake1, !snake1Released) == GameStatus.OVER) {
                         tick(gc);
                         // TODO: 2021. 04. 22. get player real name if (s)he has
                         //  and write to the canvas
@@ -137,9 +138,9 @@ public class CanvasController extends BaseController {
                         exit();
                     }
                 }
-                if (gameModel.isMultiPlayer() && now - last2 > 1e9 / snake2.getSpeed()) {
+                if (game.isMultiPlayer() && now - last2 > 1e9 / snake2.getSpeed()) {
                     last2 = now;
-                    gameModel.move(snake2, !snake2Released);
+                    game.move(snake2, !snake2Released);
                 }
                 tick(gc);
             }
@@ -155,11 +156,11 @@ public class CanvasController extends BaseController {
 
         // draw snakes
         draw(gc, snake1);
-        if (gameModel.isMultiPlayer())
+        if (game.isMultiPlayer())
             draw(gc, snake2);
     }
 
-    private void draw(GraphicsContext gc, SnakeModel snake) {
+    private void draw(GraphicsContext gc, Snake snake) {
         gc.setLineWidth(2);
         gc.setStroke(Color.BLACK);
         gc.setFill(snake.getColor());
@@ -172,12 +173,12 @@ public class CanvasController extends BaseController {
     private void draw(GraphicsContext gc) {
         /* background */
         gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, gameModel.getBoard().getSize() * blockSize, gameModel.getBoard().getSize() * blockSize);
+        gc.fillRect(0, 0, game.getBoard().getSize() * blockSize, game.getBoard().getSize() * blockSize);
 
-        if (gameModel.getBoard().isBoundary()) {
+        if (game.getBoard().isBoundary()) {
             double padding = 5;
             double radius = 10;
-            int size = gameModel.getBoard().getSize();
+            int size = game.getBoard().getSize();
             gc.setFill(Color.ORANGE);
             for (int i = 0; i < size; ++i) {
                 // left
@@ -197,13 +198,13 @@ public class CanvasController extends BaseController {
 
         gc.setStroke(Color.LIGHTGRAY);
         gc.setLineWidth(0.5);
-        for (int i = 0; i < gameModel.getBoard().getSize(); i++) {
+        for (int i = 0; i < game.getBoard().getSize(); i++) {
             gc.strokeLine(i * blockSize, 0, i * blockSize, canvas.getWidth());
             gc.strokeLine(0, i * blockSize, canvas.getHeight(), i * blockSize);
         }
     }
 
-    private void draw(GraphicsContext gc, List<FruitModel> fruits) {
+    private void draw(GraphicsContext gc, List<Fruit> fruits) {
         double padding = 2.5;
         for (var fruit: fruits) {
             gc.setFill(fruit.getColor());
@@ -214,10 +215,10 @@ public class CanvasController extends BaseController {
 
     @Override
     public void onSwitch() {
-        if (gameModel.getStatus() == GameModel.GameStatus.OVER || gameModel.getStatus() == GameModel.GameStatus.INITIAL)
-            gameModel.restart();
+        if (game.getStatus() == GameStatus.OVER || game.getStatus() == GameStatus.INITIAL)
+            game.restart();
         timer.start();
-        gameModel.setStatus(GameModel.GameStatus.RUNNING);
+        game.setStatus(GameStatus.RUNNING);
     }
 
 }

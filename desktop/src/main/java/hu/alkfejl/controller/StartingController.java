@@ -1,7 +1,7 @@
 package hu.alkfejl.controller;
 
 import hu.alkfejl.App;
-import hu.alkfejl.model.GameModel;
+import hu.alkfejl.model.Game.GameStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -26,12 +26,12 @@ public class StartingController extends BaseController {
     }
 
     public void playerOne(ActionEvent actionEvent) {
-        gameModel.setMultiPlayer(false);
+        game.setMultiPlayer(false);
         sceneManager.switchScene("../canvas.fxml");
     }
 
     public void playerTwo(ActionEvent actionEvent) {
-        gameModel.setMultiPlayer(true);
+        game.setMultiPlayer(true);
         sceneManager.switchScene("../canvas.fxml");
     }
 
@@ -42,12 +42,12 @@ public class StartingController extends BaseController {
 
     @Override
     public void onSwitch() {
-        if (gameModel.getStatus() == GameModel.GameStatus.OVER) {
+        if (game.getStatus() == GameStatus.OVER) {
             playerOneBtn.setDisable(false);
             playerTwoBtn.setDisable(false);
-        } else if (gameModel.getStatus() == GameModel.GameStatus.RUNNING
-                || gameModel.getStatus() == GameModel.GameStatus.STOPPED) {
-            if (gameModel.isMultiPlayer()) {
+        } else if (game.getStatus() == GameStatus.RUNNING
+                || game.getStatus() == GameStatus.STOPPED) {
+            if (game.isMultiPlayer()) {
                 playerOneBtn.setDisable(true);
                 playerTwoBtn.setDisable(false);
             }

@@ -1,6 +1,6 @@
 package hu.alkfejl.controller;
 
-import hu.alkfejl.model.GameModel;
+import hu.alkfejl.model.Game;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -28,12 +28,12 @@ public class SettingsController extends BaseController {
     @Override
     public void init() {
         setControllers();
-        gameModel.getPlayer1().getSnake().colorProperty().bindBidirectional(snake1ColorCP.valueProperty());
-        gameModel.getPlayer2().getSnake().colorProperty().bindBidirectional(snake2ColorCP.valueProperty());
-        gameModel.getBoard().boundaryProperty().bindBidirectional(boundaryCB.selectedProperty());
+        game.getPlayer1().getSnake().colorProperty().bindBidirectional(snake1ColorCP.valueProperty());
+        game.getPlayer2().getSnake().colorProperty().bindBidirectional(snake2ColorCP.valueProperty());
+        game.getBoard().boundaryProperty().bindBidirectional(boundaryCB.selectedProperty());
         // if board size changes then resize and move stage
         boardSizeSp.valueProperty().addListener((obs, oldValue, newValue) -> {
-            int size = gameModel.getBlockSize();
+            int size = game.getBlockSize();
             int diff = newValue - oldValue;
             double stageSizeX = sceneManager.getRootStage().getWidth();
             double stageSizeY = sceneManager.getRootStage().getHeight();
@@ -44,12 +44,12 @@ public class SettingsController extends BaseController {
             sceneManager.getRootStage().setY(
                     sceneManager.getRootStage().getY() - diff * size / 2.0);
         });
-        gameModel.getBoard().sizeProperty().bind(boardSizeSp.valueProperty());
+        game.getBoard().sizeProperty().bind(boardSizeSp.valueProperty());
     }
 
     @Override
     public void onSwitch() {
-        if (gameModel.getStatus() == GameModel.GameStatus.STOPPED) {
+        if (game.getStatus() == Game.GameStatus.STOPPED) {
             boardSizeSp.setDisable(true);
             snakeSpeedSp.setDisable(true);
             boundaryCB.setDisable(true);
@@ -63,8 +63,8 @@ public class SettingsController extends BaseController {
     @FXML
     private void goBack(ActionEvent actionEvent) {
         // set initial speeds
-        gameModel.getBoard().getSnake1().setStartingSpeed(snakeSpeedSp.getValue());
-        gameModel.getBoard().getSnake2().setStartingSpeed(snakeSpeedSp.getValue());
+        game.getBoard().getSnake1().setStartingSpeed(snakeSpeedSp.getValue());
+        game.getBoard().getSnake2().setStartingSpeed(snakeSpeedSp.getValue());
         sceneManager.switchScene("../starting.fxml");
     }
 

@@ -2,7 +2,7 @@ package hu.alkfejl;
 
 import hu.alkfejl.controller.BaseController;
 import hu.alkfejl.controller.SceneManager;
-import hu.alkfejl.model.GameModel;
+import hu.alkfejl.model.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -13,25 +13,25 @@ import java.io.IOException;
 
 
 public class App extends Application {
-    private final GameModel gameModel;
+    private final Game Game;
 
     public App() {
         // setup game
-        gameModel = new GameModel();
+        Game = new Game();
     }
 
     @Override
     public void start(Stage stage) throws IOException {
         // create & set stage for sceneManager
-        SceneManager sceneManager = new SceneManager(stage, gameModel);
+        SceneManager sceneManager = new SceneManager(stage, Game);
 
         // get fxmlLoader for starting scene
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("starting.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), gameModel.getSizePx(), gameModel.getSizePx());
+        Scene scene = new Scene(fxmlLoader.load(), Game.getSizePx(), Game.getSizePx());
         BaseController bc = fxmlLoader.getController();
         // set sceneManager for startingController
         bc.setSceneManager(sceneManager);
-        bc.setGameModel(gameModel);
+        bc.setGame(Game);
 
         stage.setScene(scene);
         stage.setResizable(false);

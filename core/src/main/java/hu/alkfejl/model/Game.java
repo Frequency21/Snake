@@ -10,30 +10,30 @@ import java.util.Optional;
 import java.util.Random;
 
 // rendering will be inside CanvasController's game loop
-public class GameModel {
+public class Game {
     private final ObjectProperty<PlayerModel> player1 = new SimpleObjectProperty<>();
     private final ObjectProperty<PlayerModel> player2 = new SimpleObjectProperty<>();
-    private final ObjectProperty<BoardModel> board = new SimpleObjectProperty<>();
+    private final ObjectProperty<Board> board = new SimpleObjectProperty<>();
     private final ObjectProperty<GameStatus> status = new SimpleObjectProperty<>(GameStatus.INITIAL);
     private final BooleanProperty multiPlayer = new SimpleBooleanProperty();
     private final int blockSize = 25;
     private final Random rand = new Random();
     // local use
-    private SnakeModel.Direction lastDirection;
-    private SnakeModel snake1;
-    private SnakeModel snake2;
-    private final List<FruitModel> fruits;
+    private Snake.Direction lastDirection;
+    private Snake snake1;
+    private Snake snake2;
+    private final List<Fruit> fruits;
 
-    public GameModel() {
+    public Game() {
         player1.set(new PlayerModel());
         player2.set(new PlayerModel());
-        board.set(new BoardModel(30, false));
+        board.set(new Board(30, false));
         board.get().getSnake1().setOwner(player1.get());
         board.get().getSnake2().setOwner(player2.get());
         fruits = board.get().getFruits();
     }
 
-    public GameStatus move(SnakeModel snake, boolean pressed) {
+    public GameStatus move(Snake snake, boolean pressed) {
         if (multiPlayer.get() && pressed) {
             snake.accelerate();
         }
@@ -61,7 +61,7 @@ public class GameModel {
         }
 
         /* find out which fruit was eaten, if any */
-        Optional<FruitModel> eatenFruit = fruits.stream()
+        Optional<Fruit> eatenFruit = fruits.stream()
                 .filter(fruit -> fruit.getPosition().equals(snake.getHead().getPosition()))
                 .findFirst();
         if (eatenFruit.isPresent()) {
@@ -79,7 +79,7 @@ public class GameModel {
         return GameStatus.RUNNING;
     }
 
-    public FruitModel generateFruit() throws Exception {
+    public Fruit generateFruit() throws Exception {
         Position randPos;
         int trials = 0;
         do {
@@ -118,7 +118,7 @@ public class GameModel {
             randPos = position;
             break;
         } while (true);
-        FruitModel result = new FruitModel(FruitModel.randomFruitType(), randPos);
+        Fruit result = new Fruit(Fruit.randomFruitType(), randPos);
         getBoard().getFruits().add(result);
         return result;
     }
@@ -161,15 +161,15 @@ public class GameModel {
         this.player2.set(player2);
     }
 
-    public BoardModel getBoard() {
+    public Board getBoard() {
         return board.get();
     }
 
-    public ObjectProperty<BoardModel> boardProperty() {
+    public ObjectProperty<Board> boardProperty() {
         return board;
     }
 
-    public void setBoard(BoardModel board) {
+    public void setBoard(Board board) {
         this.board.set(board);
     }
 
