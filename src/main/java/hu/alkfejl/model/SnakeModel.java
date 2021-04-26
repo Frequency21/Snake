@@ -14,8 +14,9 @@ public class SnakeModel {
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
     private Direction direction;
     private Direction lastDirection;
-    private final List<BodyPart> body = new LinkedList<>();
+    private List<BodyPart> body = new LinkedList<>();
     private BodyPart head;
+    private int startingSpeed;
     private final int MIN_SPEED = 1;
     private final int MAX_SPEED = 10;
     /**
@@ -32,6 +33,7 @@ public class SnakeModel {
     }
 
     public void eat(FruitModel fruitModel) {
+        increaseSpeed();
         switch (fruitModel.getType()) {
             case COMMON:
                 break;
@@ -73,6 +75,16 @@ public class SnakeModel {
         head = body.get(0);
     }
 
+    void clear() {
+        body.clear();
+        head = null;
+    }
+
+    void add(Position position) {
+        body.add(new BodyPart(position));
+        if (head == null) head = body.get(0);
+    }
+
     public enum Direction {
         UP, RIGHT, DOWN, LEFT;
 
@@ -90,15 +102,18 @@ public class SnakeModel {
         if (!Direction.opposites(lastDirection, direction)) {
             direction = lastDirection;
         }
-        // remove tail, then insert to neck with position of head
-        BodyPart tail = body.get(body.size() - 1);
-        tail.position.copy(head.position);
-        body.remove(body.size() - 1);
-        if (body.size() > 1)
-            body.add(1, tail);
-        else {
-            body.add(0, tail);
-            head = body.get(0);
+
+        if (body.size() > 1) {
+            // remove tail, then insert to neck with position of head
+            BodyPart tail = body.get(body.size() - 1);
+            tail.position.copy(head.position);
+            body.remove(body.size() - 1);
+            if (body.size() > 1)
+                body.add(1, tail);
+            else {
+                body.add(0, tail);
+                head = body.get(0);
+            }
         }
 
         // then move head
@@ -204,6 +219,20 @@ public class SnakeModel {
 
     public BodyPart getHead() {
         return head;
+    }
+
+    /** needs for board reset */
+    void resetDirection() {
+        direction = Direction.DOWN;
+        lastDirection = Direction.DOWN;
+    }
+
+    public int getStartingSpeed() {
+        return startingSpeed;
+    }
+
+    public void setStartingSpeed(int startingSpeed) {
+        this.startingSpeed = startingSpeed;
     }
 
     public void increase() {

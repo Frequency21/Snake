@@ -44,7 +44,6 @@ public class SettingsController extends BaseController {
                     sceneManager.getRootStage().getY() - diff * size / 2.0);
         });
         gameModel.getBoard().sizeProperty().bind(boardSizeSp.valueProperty());
-        // TODO: 2021. 04. 16. set food color property (there are no fruits in the game yet)..
     }
 
     @Override
@@ -52,6 +51,11 @@ public class SettingsController extends BaseController {
 
     @FXML
     private void goBack(ActionEvent actionEvent) {
+        // set initial speeds
+        gameModel.getBoard().getSnake1().setStartingSpeed(snakeSpeedSp.getValue());
+        gameModel.getBoard().getSnake2().setStartingSpeed(snakeSpeedSp.getValue());
+        gameModel.getBoard().getSnake1().setSpeed(snakeSpeedSp.getValue());
+        gameModel.getBoard().getSnake2().setSpeed(snakeSpeedSp.getValue());
         sceneManager.switchScene("../starting.fxml");
     }
 

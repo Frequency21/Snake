@@ -92,9 +92,7 @@ public class CanvasController extends BaseController {
 
     private void exit() {
         timer.stop();
-        gameModel.restart();
-        snake1 = gameModel.getBoard().getSnake1();
-        snake2 = gameModel.getBoard().getSnake2();
+        gameModel.setStatus(GameModel.GameStatus.OVER);
         sceneManager.switchScene("../starting.fxml");
     }
 
@@ -103,7 +101,6 @@ public class CanvasController extends BaseController {
         // initialize fields
         blockSize = gameModel.getBlockSize();
         snake1 = gameModel.getBoard().getSnake1();
-        snake1.setSpeed(6);
         snake2 = gameModel.getBoard().getSnake2();
         fruits.bindBidirectional(gameModel.getBoard().fruitsProperty());
 
@@ -217,7 +214,9 @@ public class CanvasController extends BaseController {
 
     @Override
     public void onSwitch() {
+        if (gameModel.getStatus() == GameModel.GameStatus.OVER) gameModel.restart();
         timer.start();
+        gameModel.setStatus(GameModel.GameStatus.RUNNING);
     }
 
 }

@@ -129,11 +129,7 @@ public class GameModel {
 
     public void restart() {
         board.get().reset();
-        snake1 = board.get().getSnake1();
-        snake2 = board.get().getSnake2();
-        player1.get().setSnake(snake1);
         player1.get().setScore(0);
-        player2.get().setSnake(snake2);
         player2.get().setScore(0);
     }
 
