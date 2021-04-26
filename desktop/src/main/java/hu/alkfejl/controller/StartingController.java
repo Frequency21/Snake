@@ -57,4 +57,8 @@ public class StartingController extends BaseController {
             }
         }
     }
+
+    public void openDialog(ActionEvent actionEvent) {
+
+    }
 }

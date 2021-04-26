@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="scores.db" uuid="6b26e699-e60a-4a08-82eb-982f94b97624">
+    <data-source source="LOCAL" name="scores" uuid="931e8efc-c6ad-4358-aabe-63be66979aad">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\IdeaProjects\snake\snake-desktop\src\main\resources\hu\alkfejl\score1.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:D:\IdeaProjects\snake\core\src\main\resources\scores.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.34.0/sqlite-jdbc-3.34.0.jar</url>
+        </library>
+      </libraries>
     </data-source>
   </component>
 </project>

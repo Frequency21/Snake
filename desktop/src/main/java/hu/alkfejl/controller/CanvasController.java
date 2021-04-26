@@ -215,8 +215,10 @@ public class CanvasController extends BaseController {
 
     @Override
     public void onSwitch() {
-        if (game.getStatus() == GameStatus.OVER || game.getStatus() == GameStatus.INITIAL)
+        if (game.getStatus() == GameStatus.OVER || game.getStatus() == GameStatus.INITIAL) {
+            // TODO: 2021. 04. 26. uncloseable dialog for names
             game.restart();
+        }
         timer.start();
         game.setStatus(GameStatus.RUNNING);
     }
