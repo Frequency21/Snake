@@ -47,9 +47,9 @@ public class GameModel {
         Position headPos = snake.getHead().getPosition();
         /* if snake moves out of the board or bumps into the wall */
         if (!getBoard().isBoundary()) {
-            if (headPos.getX() == -1) headPos.setX(getBoard().getSize());
+            if (headPos.getX() == -1) headPos.setX(getBoard().getSize() - 1);
             else if (headPos.getX() == getBoard().getSize()) headPos.setX(0);
-            else if (headPos.getY() == -1) headPos.setY(getBoard().getSize());
+            else if (headPos.getY() == -1) headPos.setY(getBoard().getSize() - 1);
             else if (headPos.getY() == getBoard().getSize()) headPos.setY(0);
         } else {
             if (headPos.getX() == 0 || headPos.getX() == getBoard().getSize() - 1 ||

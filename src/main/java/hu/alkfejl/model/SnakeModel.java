@@ -16,7 +16,7 @@ public class SnakeModel {
     private Direction lastDirection;
     private List<BodyPart> body = new LinkedList<>();
     private BodyPart head;
-    private int startingSpeed;
+    private int startingSpeed = 5;
     private final int MIN_SPEED = 1;
     private final int MAX_SPEED = 10;
     /**

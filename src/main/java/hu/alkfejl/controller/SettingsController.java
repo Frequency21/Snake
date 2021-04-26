@@ -1,5 +1,6 @@
 package hu.alkfejl.controller;
 
+import hu.alkfejl.model.GameModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -47,15 +48,23 @@ public class SettingsController extends BaseController {
     }
 
     @Override
-    public void onSwitch() { }
+    public void onSwitch() {
+        if (gameModel.getStatus() == GameModel.GameStatus.STOPPED) {
+            boardSizeSp.setDisable(true);
+            snakeSpeedSp.setDisable(true);
+            boundaryCB.setDisable(true);
+        } else {
+            boardSizeSp.setDisable(false);
+            snakeSpeedSp.setDisable(false);
+            boundaryCB.setDisable(false);
+        }
+    }
 
     @FXML
     private void goBack(ActionEvent actionEvent) {
         // set initial speeds
         gameModel.getBoard().getSnake1().setStartingSpeed(snakeSpeedSp.getValue());
         gameModel.getBoard().getSnake2().setStartingSpeed(snakeSpeedSp.getValue());
-        gameModel.getBoard().getSnake1().setSpeed(snakeSpeedSp.getValue());
-        gameModel.getBoard().getSnake2().setSpeed(snakeSpeedSp.getValue());
         sceneManager.switchScene("../starting.fxml");
     }
 
@@ -64,6 +73,6 @@ public class SettingsController extends BaseController {
         boardSizeSp.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(30, 40, 30, 1));
         snake1ColorCP.setValue(Color.LIGHTGREEN);
         snake2ColorCP.setValue(Color.GREEN);
-        boundaryCB.setSelected(true);
+        boundaryCB.setSelected(false);
     }
 }

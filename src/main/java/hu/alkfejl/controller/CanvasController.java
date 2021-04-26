@@ -214,7 +214,8 @@ public class CanvasController extends BaseController {
 
     @Override
     public void onSwitch() {
-        if (gameModel.getStatus() == GameModel.GameStatus.OVER) gameModel.restart();
+        if (gameModel.getStatus() == GameModel.GameStatus.OVER || gameModel.getStatus() == GameModel.GameStatus.INITIAL)
+            gameModel.restart();
         timer.start();
         gameModel.setStatus(GameModel.GameStatus.RUNNING);
     }
