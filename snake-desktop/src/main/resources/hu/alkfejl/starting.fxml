@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" fillWidth="false" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.alkfejl.controller.StartingController">
+   <children>
+      <Button fx:id="playerOneBtn" mnemonicParsing="false" onAction="#playerOne" text="1 játékos" />
+      <Button fx:id="playerTwoBtn" mnemonicParsing="false" onAction="#playerTwo" text="2 játékos" />
+      <Button fx:id="settingsBtn" mnemonicParsing="false" onAction="#settings" text="beállítások" />
+      <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#exit" text="kilépés" />
+   </children>
+</VBox>
