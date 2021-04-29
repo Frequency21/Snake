@@ -1,12 +1,17 @@
 package hu.alkfejl.model;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Snake {
     private final ObjectProperty<PlayerModel> owner = new SimpleObjectProperty<>();
@@ -23,6 +28,8 @@ public class Snake {
      * set slowing effect duration
      */
     private final SlowingTimer timer = new SlowingTimer(5);
+    private final int berserkDuration = 5;
+    private final IntegerProperty berserkTimeLeft = new SimpleIntegerProperty();
 
     public Snake(Position position, Color color, Direction direction) {
         head = new BodyPart(position);
@@ -36,16 +43,31 @@ public class Snake {
         increaseSpeed();
         switch (fruit.getType()) {
             case COMMON:
+                owner.get().increaseScore(FruitType.COMMON.getValue());
                 break;
             case REVERSE:
+                owner.get().increaseScore(FruitType.REVERSE.getValue());
                 reverse();
                 break;
             case SLOW:
+                owner.get().increaseScore(FruitType.SLOW.getValue());
                 timer.slow();
                 break;
             case EXTRA:
+                owner.get().increaseScore(FruitType.EXTRA.getValue());
                 break;
             case BERSERK:
+                owner.get().increaseScore(FruitType.BERSERK.getValue());
+//                berserk = true;
+                berserkTimeLeft.set(berserkDuration);
+                Timeline berserkTimeLine = new Timeline(
+                        new KeyFrame(
+                                Duration.seconds(berserkDuration + 1),
+//                                event -> berserk = false,
+                                new KeyValue(berserkTimeLeft, 0)
+                        )
+                );
+                berserkTimeLine.playFromStart();
                 break;
         }
     }
@@ -85,6 +107,10 @@ public class Snake {
         if (head == null) head = body.get(0);
     }
 
+    public void cut(BodyPart bodyPart) {
+        body = body.stream().takeWhile(bp -> bp != bodyPart).collect(Collectors.toList());
+    }
+
     public enum Direction {
         UP, RIGHT, DOWN, LEFT;
 
@@ -98,7 +124,7 @@ public class Snake {
      *
      * @return is it bitten itself
      */
-    boolean move() {
+    void move() {
         if (!Direction.opposites(lastDirection, direction)) {
             direction = lastDirection;
         }
@@ -131,8 +157,6 @@ public class Snake {
                 head.getPosition().decX();
                 break;
         }
-        /* check is it bitten itself */
-        return body.stream().skip(1).anyMatch(bp -> head.getPosition().equals(bp.getPosition()));
     }
 
     void accelerate() {
@@ -217,6 +241,18 @@ public class Snake {
         this.owner.set(owner);
     }
 
+    public boolean isBerserk() {
+        return berserkTimeLeft.get() > 0;
+    }
+
+    public int getBerserkTimeLeft() {
+        return berserkTimeLeft.get();
+    }
+
+    public IntegerProperty berserkTimeLeftProperty() {
+        return berserkTimeLeft;
+    }
+
     public BodyPart getHead() {
         return head;
     }
@@ -272,4 +308,28 @@ public class Snake {
             }
         }
     }
+
+    /*private class BerserkTimer {
+        private final Timer timer = new Timer();
+        private final int seconds;
+        private IntegerProperty timeLeft = new SimpleIntegerProperty();
+
+        public BerserkTimer(int seconds) {
+            this.seconds = seconds;
+        }
+
+        public void slow() {
+            timer.schedule(new BerserkTimerTask(), seconds * 1000L);
+
+            timeLeft.set(seconds);
+            berserk = true;
+        }
+
+        private class BerserkTimerTask extends TimerTask {
+            @Override
+            public void run() {
+                berserk = false;
+            }
+        }
+    }*/
 }

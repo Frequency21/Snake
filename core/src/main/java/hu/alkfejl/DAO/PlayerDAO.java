@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface PlayerDAO {
 
+    int getScore(PlayerModel player);
+
     void save(PlayerModel player);
 
-    PlayerModel get(String name);
-
-    void update(String name);
+    void save(PlayerModel player1, PlayerModel player2);
 
     void delete(String name);
 
