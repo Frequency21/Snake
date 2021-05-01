@@ -1,7 +1,6 @@
 package hu.alkfejl.DAO;
 
 import hu.alkfejl.model.PlayerModel;
-import hu.alkfejl.model.Tuple;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
 
@@ -15,32 +14,6 @@ import java.util.List;
 public class SimplePlayerDAO implements PlayerDAO {
 
     @Override
-    public int getScore(PlayerModel player) {
-        String SELECT = "select score from one_player where name = ?";
-        int score = 0;
-
-        try (
-                Connection connection = DataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(SELECT);
-        ) {
-            stmt.setString(1, player.getName());
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) score = rs.getInt("score");
-
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return score;
-    }
-
-    /**
-     * Player record updated if and only if
-     * he beats his last score or if its a new record
-     */
-    @Override
     public void save(PlayerModel player) {
         String INSERT = "insert into one_player values(?, ?)";
         try (
@@ -51,6 +24,7 @@ public class SimplePlayerDAO implements PlayerDAO {
             stmt.setInt(2, player.getScore());
             stmt.executeUpdate();
         } catch (SQLiteException e) {
+            /* if player is already in db, then update his score */
             if (e.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_PRIMARYKEY)
                 update(player);
         } catch (SQLException e) {
@@ -58,50 +32,12 @@ public class SimplePlayerDAO implements PlayerDAO {
         }
     }
 
-    @Override
-    public void save(PlayerModel player1, PlayerModel player2) {
-        String INSERT = "insert into two_player(name_1, score_1, name_2, score_2) values(?, ?, ?, ?)";
-        try (
-                Connection connection = DataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(INSERT);
-        ) {
-            stmt.setString(1, player1.getName());
-            stmt.setInt(2, player1.getScore());
-            stmt.setString(3, player2.getName());
-            stmt.setInt(4, player2.getScore());
-            stmt.executeUpdate();
-        } catch (SQLiteException e) {
-            if (e.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_PRIMARYKEY)
-                update(player1, player2);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void update(PlayerModel player1, PlayerModel player2) {
-        String UPDATE = "update two_player set score_1 = ?, score_2 = ?" +
-                " where name_1 = ? and name_2 = ? and (score_1 < ? or score_2 < ?)";
-        try (
-                Connection connection = DataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(UPDATE);
-        ) {
-            stmt.setInt(1, player1.getScore());
-            stmt.setInt(2, player2.getScore());
-            stmt.setString(3, player1.getName());
-            stmt.setString(4, player2.getName());
-            stmt.setInt(5, player1.getScore());
-            stmt.setInt(6, player2.getScore());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /** update in game --> update score if player beats his record */
     private void update(PlayerModel player) {
-        String UPDATE = "update one_player set score = ? where name = ? and score < ?";
+        String UPDATE_SCORE = "update one_player set score = ? where name = ? and score < ?";
         try (
                 Connection connection = DataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(UPDATE);
+                PreparedStatement stmt = connection.prepareStatement(UPDATE_SCORE);
         ) {
             stmt.setInt(1, player.getScore());
             stmt.setString(2, player.getName());
@@ -112,14 +48,31 @@ public class SimplePlayerDAO implements PlayerDAO {
         }
     }
 
+    /** update in top list --> name and score freely change */
     @Override
-    public void delete(String name) {
+    public void update(PlayerModel player, String newName) {
+        String UPDATE = "update one_player set name = ?, score = ? where name = ?";
+        try (
+                Connection connection = DataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(UPDATE);
+        ) {
+            stmt.setString(1, newName);
+            stmt.setInt(2, player.getScore());
+            stmt.setString(3, player.getName());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(PlayerModel player) {
         String DELETE = "delete from one_player where name = ?";
         try (
                 Connection connection = DataSource.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(DELETE);
         ) {
-            stmt.setString(1, name);
+            stmt.setString(1, player.getName());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -148,27 +101,4 @@ public class SimplePlayerDAO implements PlayerDAO {
         return players;
     }
 
-    @Override
-    public List<Tuple<PlayerModel, PlayerModel>> getAllMultiPlayer() {
-        String sqlQuery = "select * from two_player";
-        List<Tuple<PlayerModel, PlayerModel>> players = new ArrayList<>();
-
-        try (Connection connection = DataSource.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sqlQuery);
-             ResultSet rs = stmt.executeQuery()) {
-            Tuple<PlayerModel, PlayerModel> playerTuple;
-            while (rs.next()) {
-                playerTuple = new Tuple<>(new PlayerModel(), new PlayerModel());
-                playerTuple.getFirst().setName(rs.getString("name_1"));
-                playerTuple.getFirst().setScore(rs.getInt("score_1"));
-                playerTuple.getSecond().setName(rs.getString("name_2"));
-                playerTuple.getSecond().setScore(rs.getInt("score_2"));
-                players.add(playerTuple);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return players;
-    }
 }
