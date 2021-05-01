@@ -1,6 +1,7 @@
 package hu.alkfejl.DAO;
 
 import hu.alkfejl.model.PlayerModel;
+import hu.alkfejl.model.Tuple;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
 
@@ -139,6 +140,30 @@ public class SimplePlayerDAO implements PlayerDAO {
                 player.setName(rs.getString("name"));
                 player.setScore(rs.getInt("score"));
                 players.add(player);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return players;
+    }
+
+    @Override
+    public List<Tuple<PlayerModel, PlayerModel>> getAllMultiPlayer() {
+        String sqlQuery = "select * from two_player";
+        List<Tuple<PlayerModel, PlayerModel>> players = new ArrayList<>();
+
+        try (Connection connection = DataSource.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sqlQuery);
+             ResultSet rs = stmt.executeQuery()) {
+            Tuple<PlayerModel, PlayerModel> playerTuple;
+            while (rs.next()) {
+                playerTuple = new Tuple<>(new PlayerModel(), new PlayerModel());
+                playerTuple.getFirst().setName(rs.getString("name_1"));
+                playerTuple.getFirst().setScore(rs.getInt("score_1"));
+                playerTuple.getSecond().setName(rs.getString("name_2"));
+                playerTuple.getSecond().setScore(rs.getInt("score_2"));
+                players.add(playerTuple);
             }
         } catch (SQLException e) {
             e.printStackTrace();

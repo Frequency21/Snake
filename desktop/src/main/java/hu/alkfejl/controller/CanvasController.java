@@ -1,10 +1,9 @@
 package hu.alkfejl.controller;
 
+import hu.alkfejl.DAO.PlayerDAO;
 import hu.alkfejl.DAO.SimplePlayerDAO;
 import hu.alkfejl.model.*;
 import hu.alkfejl.model.Game.GameStatus;
-import hu.alkfejl.view.MultiNameDialog;
-import hu.alkfejl.view.NameDialog;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -19,7 +18,7 @@ import javafx.scene.text.TextAlignment;
 import java.util.*;
 
 
-public class CanvasController extends BaseController {
+public class CanvasController extends GameController {
 
     @FXML
     private Canvas canvas;
@@ -31,7 +30,7 @@ public class CanvasController extends BaseController {
     private Snake snake2;
     private boolean snake1Released = false;
     private boolean snake2Released = false;
-    private final SimplePlayerDAO playerDAO = new SimplePlayerDAO();
+    private final PlayerDAO playerDAO = new SimplePlayerDAO();
     private final MultiNameDialog multiNameDialog = new MultiNameDialog();
     private final NameDialog nameDialog = new NameDialog();
 
@@ -133,10 +132,7 @@ public class CanvasController extends BaseController {
             e.printStackTrace();
         }
 
-        // TODO: 2021. 04. 29. remove println
         nameDialog.resultProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(oldValue);
-            System.out.println(newValue);
             if (newValue != null && !newValue.isEmpty()) {
                 snake1.getOwner().setName(newValue);
                 playerDAO.save(snake1.getOwner());
@@ -147,7 +143,7 @@ public class CanvasController extends BaseController {
             if (newValue != null && !newValue.getFirst().isEmpty() && !newValue.getSecond().isEmpty()) {
                 snake1.getOwner().setName(newValue.getFirst());
                 snake2.getOwner().setName(newValue.getSecond());
-                // TODO: 2021. 04. 29. save to db
+                playerDAO.save(snake1.getOwner(), snake2.getOwner());
             }
         });
 
@@ -171,9 +167,6 @@ public class CanvasController extends BaseController {
                     gs1 = game.move(snake1, !snake1Released);
                     if (!game.isMultiPlayer() && gs1 == GameStatus.OVER) {
                         tick(gc);
-                        if (snake1.getOwner().getName() == null || snake1.getOwner().getName().isEmpty())
-                            System.out.println("Player1 lose");
-                        else System.out.println(snake1.getOwner().getName() + " lose");
                         exit();
                     }
                 }
@@ -182,13 +175,17 @@ public class CanvasController extends BaseController {
                     gs2 = game.move(snake2, !snake2Released);
                 }
 
-                if (gs1 == GameStatus.OVER || gs2 == GameStatus.OVER)
+                if (gs1 == GameStatus.OVER || gs2 == GameStatus.OVER) {
+                    tick(gc);
                     exit();
+                }
 
                 /* after snakes move, did they collide? */
                 if (game.isMultiPlayer()) {
-                    if (game.checkCollision() == GameStatus.OVER)
+                    if (game.checkCollision() == GameStatus.OVER) {
+                        tick(gc);
                         exit();
+                    }
                 }
                 tick(gc);
             }

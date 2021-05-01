@@ -1,6 +1,7 @@
 package hu.alkfejl.DAO;
 
 import hu.alkfejl.model.PlayerModel;
+import hu.alkfejl.model.Tuple;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ public interface PlayerDAO {
 
     List<PlayerModel> getAll();
 
+    List<Tuple<PlayerModel, PlayerModel>> getAllMultiPlayer();
 }

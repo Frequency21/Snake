@@ -1,12 +1,13 @@
 package hu.alkfejl;
 
+import hu.alkfejl.DAO.PlayerDAO;
 import hu.alkfejl.DAO.SimplePlayerDAO;
 import hu.alkfejl.model.PlayerModel;
 
 public class Main {
 
     public static void main(String[] args) {
-        SimplePlayerDAO dao = new SimplePlayerDAO();
+        PlayerDAO dao = new SimplePlayerDAO();
 
         System.out.println("Before insert");
         dao.getAll().forEach(System.out::println);
