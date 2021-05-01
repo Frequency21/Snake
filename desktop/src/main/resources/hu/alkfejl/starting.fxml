@@ -7,7 +7,7 @@
    <children>
       <Button fx:id="playerOneBtn" mnemonicParsing="false" onAction="#playerOne" text="1 játékos" />
       <Button fx:id="playerTwoBtn" mnemonicParsing="false" onAction="#playerTwo" text="2 játékos" />
-      <Button fx:id="dialog" mnemonicParsing="false" onAction="#openDialog" text="2 játékos" />
+      <Button fx:id="topListBtn" mnemonicParsing="false" onAction="#showTopList" text="top lista" />
       <Button fx:id="settingsBtn" mnemonicParsing="false" onAction="#settings" text="beállítások" />
       <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#exit" text="kilépés" />
    </children>

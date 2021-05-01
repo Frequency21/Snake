@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class StartingController extends BaseController {
+public class StartingController extends GameController {
 
     @FXML
     private Button playerOneBtn;
@@ -58,7 +58,7 @@ public class StartingController extends BaseController {
         }
     }
 
-    public void openDialog(ActionEvent actionEvent) {
-
+    public void showTopList(ActionEvent actionEvent) {
+        sceneManager.switchScene("../topList.fxml");
     }
 }

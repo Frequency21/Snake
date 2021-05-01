@@ -2,7 +2,7 @@ package hu.alkfejl.controller;
 
 import hu.alkfejl.model.Game;
 
-public abstract class BaseController {
+public abstract class GameController {
     protected SceneManager sceneManager;
     protected Game game;
 

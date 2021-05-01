@@ -18,6 +18,8 @@ public class SceneManager {
     // rootStage could change across the program lifecycle
     // but Game should never
     private final Game Game;
+    // hold reference both to Scene and its controller (onSwitch and init callbacks)
+    private final Map<String, Tuple<Scene, GameController>> gameScenes = new HashMap<>();
 
     public SceneManager(Stage rootStage, Game Game) {
         if (rootStage == null) throw new IllegalArgumentException();
@@ -25,16 +27,13 @@ public class SceneManager {
         this.Game = Game;
     }
 
-    // hold reference both to Scene and its controller (onSwitch and init callbacks)
-    private final Map<String, Tuple<Scene, BaseController>> scenes = new HashMap<>();
-
     // scene size will match board size
     public void switchScene(String url) {
-        Tuple<Scene, BaseController> tuple = scenes.computeIfAbsent(url, u -> {
+        Tuple<Scene, GameController> tuple = gameScenes.computeIfAbsent(url, u -> {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(u));
             try {
                 Pane p = loader.load();
-                BaseController controller = loader.getController();
+                GameController controller = loader.getController();
                 controller.setSceneManager(this);
                 controller.setGame(Game);
                 controller.init();
@@ -47,24 +46,6 @@ public class SceneManager {
         rootStage.setScene(tuple.getFirst());
     }
 
-
-    public void switchScene(String url, int width, int height) {
-        Tuple<Scene, BaseController> tuple = scenes.computeIfAbsent(url, u -> {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(u));
-            try {
-                Pane p = loader.load();
-                BaseController controller = loader.getController();
-                controller.setSceneManager(this);
-                controller.setGame(Game);
-                controller.init();
-                return new Tuple<>(new Scene(p, width, height), controller);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-        tuple.getSecond().onSwitch();
-        rootStage.setScene(tuple.getFirst());
-    }
 
     public Stage getRootStage() {
         return rootStage;

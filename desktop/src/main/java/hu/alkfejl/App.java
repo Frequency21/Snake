@@ -1,6 +1,6 @@
 package hu.alkfejl;
 
-import hu.alkfejl.controller.BaseController;
+import hu.alkfejl.controller.GameController;
 import hu.alkfejl.controller.SceneManager;
 import hu.alkfejl.model.Game;
 import javafx.application.Application;
@@ -28,7 +28,7 @@ public class App extends Application {
         // get fxmlLoader for starting scene
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("starting.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), Game.getSizePx(), Game.getSizePx());
-        BaseController bc = fxmlLoader.getController();
+        GameController bc = fxmlLoader.getController();
         // set sceneManager for startingController
         bc.setSceneManager(sceneManager);
         bc.setGame(Game);
