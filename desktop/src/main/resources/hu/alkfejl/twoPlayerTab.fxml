@@ -17,7 +17,8 @@
             prefHeight="750.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/11"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.alkfejl.controller.TwoPlayerTabController">
     <right>
-        <TableView fx:id="playersTv" prefHeight="750.0" prefWidth="433.0" BorderPane.alignment="CENTER">
+        <TableView fx:id="playersTv" prefHeight="750.0" prefWidth="433.0" BorderPane.alignment="CENTER"
+                   onMouseClicked="#setTextFields">
             <columns>
                 <TableColumn fx:id="nameOneCol" prefWidth="126.0" text="Első játékos" />
                 <TableColumn fx:id="scoreOneCol" prefWidth="97.0" text="pontszám" />
@@ -35,26 +36,32 @@
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
                     <Label text="Első játékos:" />
-                    <Label text="Pontszám:" GridPane.rowIndex="1" />
+                    <Label text="Pontszám:" GridPane.rowIndex="2" />
                     <TextField fx:id="nameOneTF" GridPane.columnIndex="1" />
-                    <TextField fx:id="scoreOneTF" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-               <Label text="Második játékos:" GridPane.rowIndex="2" />
-               <Label text="Pontszám:" GridPane.rowIndex="3" />
-               <TextField fx:id="nameTwoTF" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-               <TextField fx:id="scoreTwoTF" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <TextField fx:id="scoreOneTF" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               <Label text="Második játékos:" GridPane.rowIndex="3" />
+               <Label text="Pontszám:" GridPane.rowIndex="5" />
+               <TextField fx:id="nameTwoTF" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               <TextField fx:id="scoreTwoTF" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+               <Label text="Új név:" GridPane.rowIndex="1" />
+               <Label text="Új név:" GridPane.rowIndex="4" />
+               <TextField fx:id="newNameTwoTF" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               <TextField fx:id="newNameOneTF" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 </children>
             </GridPane>
             <HBox alignment="CENTER" prefWidth="200.0" spacing="20.0">
                 <children>
-                    <Button fx:id="saveBtn" mnemonicParsing="false" text="felvitel" />
-                    <Button fx:id="updateBtn" mnemonicParsing="false" text="frissítés" />
-                    <Button fx:id="deleteBtn" mnemonicParsing="false" text="törlés" />
+                    <Button fx:id="saveBtn" onAction="#save" mnemonicParsing="false" text="felvitel" />
+                    <Button fx:id="updateBtn" onAction="#update" mnemonicParsing="false" text="frissítés" />
+                    <Button fx:id="deleteBtn" onAction="#delete" mnemonicParsing="false" text="törlés" />
                 </children>
             </HBox>
          <Button mnemonicParsing="false" onAction="#goBack" text="vissza" />

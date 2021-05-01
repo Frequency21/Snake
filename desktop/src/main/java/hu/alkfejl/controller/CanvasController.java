@@ -1,6 +1,8 @@
 package hu.alkfejl.controller;
 
+import hu.alkfejl.DAO.MultiPlayerDAO;
 import hu.alkfejl.DAO.PlayerDAO;
+import hu.alkfejl.DAO.SimpleMultiPlayerDAO;
 import hu.alkfejl.DAO.SimplePlayerDAO;
 import hu.alkfejl.model.*;
 import hu.alkfejl.model.Game.GameStatus;
@@ -31,6 +33,7 @@ public class CanvasController extends GameController {
     private boolean snake1Released = false;
     private boolean snake2Released = false;
     private final PlayerDAO playerDAO = new SimplePlayerDAO();
+    private final MultiPlayerDAO mpDAO = new SimpleMultiPlayerDAO();
     private final MultiNameDialog multiNameDialog = new MultiNameDialog();
     private final NameDialog nameDialog = new NameDialog();
 
@@ -104,7 +107,7 @@ public class CanvasController extends GameController {
             if (!multiNameDialog.isNamesSet()) {
                 multiNameDialog.show();
             } else {
-                playerDAO.save(snake1.getOwner(), snake2.getOwner());
+                mpDAO.save(new Tuple<>(snake1.getOwner(), snake2.getOwner()));
             }
         } else if (!nameDialog.isNameSet()) {
             nameDialog.show();
@@ -143,7 +146,7 @@ public class CanvasController extends GameController {
             if (newValue != null && !newValue.getFirst().isEmpty() && !newValue.getSecond().isEmpty()) {
                 snake1.getOwner().setName(newValue.getFirst());
                 snake2.getOwner().setName(newValue.getSecond());
-                playerDAO.save(snake1.getOwner(), snake2.getOwner());
+                mpDAO.save(new Tuple<>(snake1.getOwner(), snake2.getOwner()));
             }
         });
 

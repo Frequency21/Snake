@@ -34,14 +34,12 @@ public class TopListController extends GameController implements Initializable {
         twoPlayerTabController.setTopListController(this);
         onePlayer.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (onePlayerDirty && newValue) {
-                System.out.println("refreshed");
                 onePlayerTabController.showPlayers();
                 onePlayerDirty = false;
             }
         });
         twoPlayer.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (twoPlayerDirty && newValue) {
-                System.out.println("refreshed");
                 twoPlayerTabController.showPlayers();
                 twoPlayerDirty = false;
             }
