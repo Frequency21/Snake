@@ -107,12 +107,14 @@ public class CanvasController extends GameController {
             if (!multiNameDialog.isNamesSet()) {
                 multiNameDialog.show();
             } else {
-                mpDAO.save(new Tuple<>(snake1.getOwner(), snake2.getOwner()));
+                mpDAO.save(new PTuple<>(snake1.getOwner(), snake2.getOwner()));
+                multiNameDialog.setNamesSet(false);
             }
         } else if (!nameDialog.isNameSet()) {
             nameDialog.show();
         } else {
             playerDAO.save(snake1.getOwner());
+            nameDialog.setNameSet(false);
         }
         sceneManager.switchScene("../starting.fxml");
     }
@@ -146,7 +148,7 @@ public class CanvasController extends GameController {
             if (newValue != null && !newValue.getFirst().isEmpty() && !newValue.getSecond().isEmpty()) {
                 snake1.getOwner().setName(newValue.getFirst());
                 snake2.getOwner().setName(newValue.getSecond());
-                mpDAO.save(new Tuple<>(snake1.getOwner(), snake2.getOwner()));
+                mpDAO.save(new PTuple<>(snake1.getOwner(), snake2.getOwner()));
             }
         });
 
@@ -154,8 +156,6 @@ public class CanvasController extends GameController {
         timer = new AnimationTimer() {
             long last1;
             long last2;
-            GameStatus gs1;
-            GameStatus gs2;
 
             @Override
             public void handle(long now) {
@@ -167,30 +167,18 @@ public class CanvasController extends GameController {
                 }
                 if (now - last1 > 1e9 / snake1.getSpeed()) {
                     last1 = now;
-                    gs1 = game.move(snake1, !snake1Released);
-                    if (!game.isMultiPlayer() && gs1 == GameStatus.OVER) {
-                        tick(gc);
-                        exit();
-                    }
+                    game.move(snake1, !snake1Released);
                 }
                 if (game.isMultiPlayer() && now - last2 > 1e9 / snake2.getSpeed()) {
                     last2 = now;
-                    gs2 = game.move(snake2, !snake2Released);
-                }
-
-                if (gs1 == GameStatus.OVER || gs2 == GameStatus.OVER) {
-                    tick(gc);
-                    exit();
+                    game.move(snake2, !snake2Released);
                 }
 
                 /* after snakes move, did they collide? */
-                if (game.isMultiPlayer()) {
-                    if (game.checkCollision() == GameStatus.OVER) {
-                        tick(gc);
-                        exit();
-                    }
-                }
+                game.checkCollision();
                 tick(gc);
+                if (game.getStatus() == GameStatus.OVER)
+                    exit();
             }
         };
     }
@@ -226,7 +214,7 @@ public class CanvasController extends GameController {
         if (snake1.getBerserkTimeLeft() > 0) {
             if (game.isMultiPlayer()) {
                 gc.fillText("" + snake1.getBerserkTimeLeft(), snake1.getHead().getPosition().getX() * blockSize + blockSize / 2.0,
-                        snake1.getHead().getPosition().getY() * blockSize + blockSize / 2.0);
+                        snake1.getHead().getPosition().getY() * blockSize + 20);
             } else {
                 gc.fillText("" + snake1.getBerserkTimeLeft(), snake1.getHead().getPosition().getX() * blockSize + blockSize / 2.0,
                         snake1.getHead().getPosition().getY() * blockSize + 20);
@@ -235,7 +223,7 @@ public class CanvasController extends GameController {
         if (snake2.getBerserkTimeLeft() > 0) {
             if (game.isMultiPlayer()) {
                 gc.fillText("" + snake2.getBerserkTimeLeft(), snake2.getHead().getPosition().getX() * blockSize + blockSize / 2.0,
-                        snake2.getHead().getPosition().getY() * blockSize + blockSize / 2.0);
+                        snake2.getHead().getPosition().getY() * blockSize + 20);
             } else {
                 gc.fillText("" + snake2.getBerserkTimeLeft(), snake2.getHead().getPosition().getX() * blockSize + blockSize / 2.0,
                         snake2.getHead().getPosition().getY() * blockSize + 20);

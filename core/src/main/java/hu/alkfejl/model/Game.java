@@ -34,7 +34,7 @@ public class Game {
         snake2 = getBoard().getSnake2();
     }
 
-    public GameStatus move(Snake snake, boolean pressed) {
+    public void move(Snake snake, boolean pressed) {
         if (multiPlayer.get() && pressed) {
             snake.accelerate();
         }
@@ -47,13 +47,11 @@ public class Game {
         if (bittenPart.isPresent()) {
             if (multiPlayer.get()) {
                 status.set(GameStatus.OVER);
-                return status.get();
             }
             if (snake.isBerserk()) {
                 snake.cut(bittenPart.get());
             } else {
                 status.set(GameStatus.OVER);
-                return status.get();
             }
         }
 
@@ -64,10 +62,9 @@ public class Game {
             else if (headPos.getY() == -1) headPos.setY(getBoard().getSize() - 1);
             else if (headPos.getY() == getBoard().getSize()) headPos.setY(0);
         } else {
-            if (headPos.getX() == 0 || headPos.getX() == getBoard().getSize() - 1 ||
-                    headPos.getY() == 0 || headPos.getY() == getBoard().getSize() - 1) {
+            if (headPos.getX() == 0 || headPos.getX() == getBoard().getSize() - 1
+                || headPos.getY() == 0 || headPos.getY() == getBoard().getSize() - 1) {
                 status.set(GameStatus.OVER);
-                return status.get();
             }
         }
 
@@ -85,7 +82,6 @@ public class Game {
                 System.err.println(e.getMessage());
             }
         }
-        return GameStatus.RUNNING;
     }
 
     public Fruit generateFruit() throws Exception {
@@ -132,7 +128,7 @@ public class Game {
         return result;
     }
 
-    public GameStatus checkCollision() {
+    public void checkCollision() {
         /* if snake1 head collided into snake2 body */
 
         Optional<Snake.BodyPart> bittenPart1 = snake1.getBody().stream().filter(bp ->
@@ -144,26 +140,18 @@ public class Game {
         if (bittenPart1.isPresent()) {
             if (snake2.isBerserk()) {
                 snake1.cut(bittenPart1.get());
-                if (snake1.getBody().size() == 0) {
+                if (snake1.getBody().size() == 0)
                     status.set(GameStatus.OVER);
-                }
-            } else {
-                status.set(GameStatus.OVER);
-            }
+            } else status.set(GameStatus.OVER);
         }
 
         if (bittenPart2.isPresent()) {
             if (snake1.isBerserk()) {
                 snake2.cut(bittenPart2.get());
-                if (snake2.getBody().size() == 0) {
+                if (snake2.getBody().size() == 0)
                     status.set(GameStatus.OVER);
-                }
-            } else {
-                status.set(GameStatus.OVER);
-            }
+            } else status.set(GameStatus.OVER);
         }
-
-        return status.get();
     }
 
     private Position randomPosition(int size) {

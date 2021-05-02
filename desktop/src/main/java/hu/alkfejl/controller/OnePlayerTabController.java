@@ -73,14 +73,13 @@ public class OnePlayerTabController implements Initializable {
         if (
                 nameTF.getText().isEmpty()
                 || scoreTF.getText().isEmpty()
-                || newNameTF.getText().isEmpty()
         ) {
             // TODO: 2021. 05. 01. alert
         } else {
             PlayerModel player = new PlayerModel();
             player.setName(nameTF.getText());
             player.setScore(Integer.parseInt(scoreTF.getText()));
-            playerDAO.update(player, newNameTF.getText());
+            playerDAO.update(player, newNameTF.getText().isEmpty() ? nameTF.getText() : newNameTF.getText());
             clear();
             showPlayers();
         }

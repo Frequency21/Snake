@@ -20,9 +20,9 @@ public class Main {
         System.out.println("After insert");
         dao.getAll().forEach(System.out::println);
 
-//        System.out.println("Before delete");
-//        dao.getAll().forEach(System.out::println);
-//
+        System.out.println("Before delete");
+        dao.getAll().forEach(System.out::println);
+
 //        dao.delete("physx");
 //
 //        System.out.println("After delete");

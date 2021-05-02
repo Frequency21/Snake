@@ -47,7 +47,7 @@ public class MultiNameDialog extends Dialog<Tuple<String, String>> {
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public boolean isNamesSet() {
-        return isNamesSet;
-    }
+    public boolean isNamesSet() { return isNamesSet; }
+
+    public void setNamesSet(boolean namesSet) { isNamesSet = namesSet; }
 }

@@ -56,5 +56,5 @@ public class PlayerModel {
     }
 
     @Override
-    public String toString() { return "PlayerModel{name=" + name + ", score=" + score + '}'; }
+    public String toString() { return "PlayerModel{name=" + name.get() + ", score=" + score.get() + '}'; }
 }

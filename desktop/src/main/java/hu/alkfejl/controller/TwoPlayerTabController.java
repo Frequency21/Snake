@@ -2,6 +2,7 @@ package hu.alkfejl.controller;
 
 import hu.alkfejl.DAO.MultiPlayerDAO;
 import hu.alkfejl.DAO.SimpleMultiPlayerDAO;
+import hu.alkfejl.model.PTuple;
 import hu.alkfejl.model.PlayerModel;
 import hu.alkfejl.model.Tuple;
 import javafx.collections.FXCollections;
@@ -22,11 +23,11 @@ public class TwoPlayerTabController implements Initializable {
     /* parent controller */
     private TopListController topListController;
     private final MultiPlayerDAO mpDAO = new SimpleMultiPlayerDAO();
-    public TableView<Tuple<PlayerModel, PlayerModel>> playersTv;
-    public TableColumn<Tuple<PlayerModel, PlayerModel>, String> nameOneCol;
-    public TableColumn<Tuple<PlayerModel, PlayerModel>, Integer> scoreOneCol;
-    public TableColumn<Tuple<PlayerModel, PlayerModel>, String> nameTwoCol;
-    public TableColumn<Tuple<PlayerModel, PlayerModel>, Integer> scoreTwoCol;
+    public TableView<PTuple<PlayerModel, PlayerModel>> playersTv;
+    public TableColumn<PTuple<PlayerModel, PlayerModel>, String> nameOneCol;
+    public TableColumn<PTuple<PlayerModel, PlayerModel>, Integer> scoreOneCol;
+    public TableColumn<PTuple<PlayerModel, PlayerModel>, String> nameTwoCol;
+    public TableColumn<PTuple<PlayerModel, PlayerModel>, Integer> scoreTwoCol;
     public TextField nameOneTF;
     public TextField newNameTwoTF;
     public TextField scoreOneTF;
@@ -51,7 +52,7 @@ public class TwoPlayerTabController implements Initializable {
     }
 
     void showPlayers() {
-        ObservableList<Tuple<PlayerModel, PlayerModel>> players =
+        ObservableList<PTuple<PlayerModel, PlayerModel>> players =
                 FXCollections.observableArrayList(mpDAO.getAll());
         playersTv.setItems(players);
     }
@@ -73,7 +74,7 @@ public class TwoPlayerTabController implements Initializable {
         ) {
             // TODO: 2021. 05. 01. alert
         } else {
-            Tuple<PlayerModel, PlayerModel> players = new Tuple<>(new PlayerModel(), new PlayerModel());
+            PTuple<PlayerModel, PlayerModel> players = new PTuple<>(new PlayerModel(), new PlayerModel());
             players.getFirst().setName(nameOneTF.getText());
             players.getFirst().setScore(Integer.parseInt(scoreOneTF.getText()));
             players.getSecond().setName(nameTwoTF.getText());
@@ -93,7 +94,7 @@ public class TwoPlayerTabController implements Initializable {
         ) {
             // TODO: 2021. 05. 01. alert
         } else {
-            Tuple<PlayerModel, PlayerModel> players = new Tuple<>(new PlayerModel(), new PlayerModel());
+            PTuple<PlayerModel, PlayerModel> players = new PTuple<>(new PlayerModel(), new PlayerModel());
             players.getFirst().setName(nameOneTF.getText());
             players.getFirst().setScore(Integer.parseInt(scoreOneTF.getText()));
             players.getSecond().setName(nameTwoTF.getText());
@@ -114,7 +115,7 @@ public class TwoPlayerTabController implements Initializable {
         if (nameOneTF.getText().isEmpty() || nameTwoTF.getText().isEmpty()) {
             // TODO: 2021. 05. 01. alert
         } else {
-            Tuple<PlayerModel, PlayerModel> players = new Tuple<>(new PlayerModel(), new PlayerModel());
+            PTuple<PlayerModel, PlayerModel> players = new PTuple<>(new PlayerModel(), new PlayerModel());
             players.getFirst().setName(nameOneTF.getText());
             players.getSecond().setName(nameTwoTF.getText());
             mpDAO.delete(players);
@@ -124,7 +125,7 @@ public class TwoPlayerTabController implements Initializable {
     }
 
     public void setTextFields(MouseEvent mouseEvent) {
-        Tuple<PlayerModel, PlayerModel> playerTuple = playersTv.getSelectionModel().getSelectedItem();
+        PTuple<PlayerModel, PlayerModel> playerTuple = playersTv.getSelectionModel().getSelectedItem();
         if (playerTuple == null) return;
         nameOneTF.setText(playerTuple.getFirst().getName());
         scoreOneTF.setText("" + playerTuple.getFirst().getScore());

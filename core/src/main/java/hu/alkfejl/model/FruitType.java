@@ -5,11 +5,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 
 public enum FruitType {
-    COMMON(Color.GRAY, 1, 25),
-    REVERSE(Color.YELLOW, 1, 30),
-    SLOW(Color.BLUE, 2, 20),
-    BERSERK(Color.RED, 2, 5),
-    EXTRA(Color.PURPLE, 5, 20);
+    COMMON(Color.GRAY, 1, 0),
+    REVERSE(Color.YELLOW, 1, 0),
+    SLOW(Color.BLUE, 2, 100),
+    BERSERK(Color.RED, 2, 0),
+    EXTRA(Color.PURPLE, 5, 0);
 
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
     private final int value;

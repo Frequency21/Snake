@@ -13,9 +13,35 @@ import java.util.List;
 
 public class SimplePlayerDAO implements PlayerDAO {
 
+    private final String INSERT = "insert into one_player values(?, ?)";
+    private final String UPDATE_SCORE = "update one_player set score = ? where name = ? and score < ?";
+    private final String UPDATE = "update one_player set name = ?, score = ? where name = ?";
+    private final String DELETE = "delete from one_player where name = ?";
+    private final String SELECT_ALL = "select * from one_player";
+    private final String SELECT_BY_NAME = "select name, score from one_player where name = ?";
+
+    @Override
+    public PlayerModel get(String name) {
+        PlayerModel player = new PlayerModel();
+        try (
+                Connection connection = DataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(SELECT_BY_NAME)
+        ) {
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                player.setName(rs.getString(1));
+                player.setScore(rs.getInt(2));
+                return player;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public void save(PlayerModel player) {
-        String INSERT = "insert into one_player values(?, ?)";
         try (
                 Connection connection = DataSource.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(INSERT);
@@ -34,7 +60,6 @@ public class SimplePlayerDAO implements PlayerDAO {
 
     /** update in game --> update score if player beats his record */
     private void update(PlayerModel player) {
-        String UPDATE_SCORE = "update one_player set score = ? where name = ? and score < ?";
         try (
                 Connection connection = DataSource.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(UPDATE_SCORE);
@@ -51,7 +76,6 @@ public class SimplePlayerDAO implements PlayerDAO {
     /** update in top list --> name and score freely change */
     @Override
     public void update(PlayerModel player, String newName) {
-        String UPDATE = "update one_player set name = ?, score = ? where name = ?";
         try (
                 Connection connection = DataSource.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(UPDATE);
@@ -67,7 +91,6 @@ public class SimplePlayerDAO implements PlayerDAO {
 
     @Override
     public void delete(PlayerModel player) {
-        String DELETE = "delete from one_player where name = ?";
         try (
                 Connection connection = DataSource.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(DELETE);
@@ -80,12 +103,24 @@ public class SimplePlayerDAO implements PlayerDAO {
     }
 
     @Override
+    public void delete(String name) {
+        try (
+                Connection connection = DataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(DELETE);
+        ) {
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public List<PlayerModel> getAll() {
-        String sqlQuery = "select * from one_player";
         List<PlayerModel> players = new ArrayList<>();
 
         try (Connection connection = DataSource.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sqlQuery);
+             PreparedStatement stmt = connection.prepareStatement(SELECT_ALL);
              ResultSet rs = stmt.executeQuery()) {
             PlayerModel player;
             while (rs.next()) {
@@ -94,11 +129,12 @@ public class SimplePlayerDAO implements PlayerDAO {
                 player.setScore(rs.getInt("score"));
                 players.add(player);
             }
+            return players;
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return players;
+        return null;
     }
 
 }

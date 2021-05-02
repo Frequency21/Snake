@@ -1,0 +1,34 @@
+
+<web-app>
+    <display-name>Archetype Created Web Application</display-name>
+
+    <servlet>
+        <servlet-name>Home</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OnePlayerTopList</servlet-name>
+        <jsp-file>/pages/one-player-top-list.jsp</jsp-file>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TwoPlayerTopList</servlet-name>
+        <jsp-file>/pages/two-player-top-list.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Home</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OnePlayerTopList</servlet-name>
+        <url-pattern>/toplist/one</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TwoPlayerTopList</servlet-name>
+        <url-pattern>/toplist/two</url-pattern>
+    </servlet-mapping>
+</web-app>

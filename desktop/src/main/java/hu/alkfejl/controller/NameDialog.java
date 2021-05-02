@@ -43,7 +43,7 @@ public class NameDialog extends Dialog<String> {
         initModality(Modality.APPLICATION_MODAL);
     }
 
-    public boolean isNameSet() {
-        return nameSet;
-    }
+    public boolean isNameSet() { return nameSet; }
+
+    public void setNameSet(boolean nameSet) { this.nameSet = nameSet; }
 }

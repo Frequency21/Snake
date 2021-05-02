@@ -1,5 +1,6 @@
 package hu.alkfejl.DAO;
 
+import hu.alkfejl.model.PTuple;
 import hu.alkfejl.model.PlayerModel;
 import hu.alkfejl.model.Tuple;
 import org.sqlite.SQLiteErrorCode;
@@ -23,12 +24,37 @@ public class SimpleMultiPlayerDAO implements MultiPlayerDAO {
             "where name_1 = ? and name_2 = ?";
     private static final String DELETE_QUERY = "delete from two_player where name_1 = ? and name_2 = ?";
     private static final String SELECT_ALL_QUERY = "select * from two_player";
+    private static final String SELECT_BY_NAMES = "select name_1, score_1, name_2, score_2 from two_player where name_1 = ? and name_2 = ?";
+
+    @Override
+    public PTuple<PlayerModel, PlayerModel> get(String name1, String name2) {
+        PTuple<PlayerModel, PlayerModel> playersTuple = new PTuple<>(new PlayerModel(), new PlayerModel());
+        try (Connection connection = DataSource.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(SELECT_BY_NAMES);
+            ) {
+            stmt.setString(1, name1);
+            stmt.setString(2, name2);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                playersTuple.getFirst().setName(rs.getString(1));
+                playersTuple.getFirst().setScore(rs.getInt(2));
+                playersTuple.getSecond().setName(rs.getString(3));
+                playersTuple.getSecond().setScore(rs.getInt(4));
+            }
+            rs.close();
+            return playersTuple;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     /**
      * this method used in game (scores saved only, when top score has beaten)
      */
     @Override
-    public void save(Tuple<PlayerModel, PlayerModel> players) {
+    public void save(PTuple<PlayerModel, PlayerModel> players) {
         try (Connection connection = DataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(SAVE_QUERY);
         ) {
@@ -47,7 +73,7 @@ public class SimpleMultiPlayerDAO implements MultiPlayerDAO {
     }
 
     /* update only scores (if max score beats old top score) */
-    private void update(Tuple<PlayerModel, PlayerModel> players) {
+    private void update(PTuple<PlayerModel, PlayerModel> players) {
         try (Connection connection = DataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(SELECT_SCORES_QUERY);
         ) {
@@ -85,7 +111,7 @@ public class SimpleMultiPlayerDAO implements MultiPlayerDAO {
      * @param newNames if null, then only scores are updated.
      */
     @Override
-    public void update(Tuple<PlayerModel, PlayerModel> players, Tuple<String, String> newNames) {
+    public void update(PTuple<PlayerModel, PlayerModel> players, Tuple<String, String> newNames) {
         try (Connection connection = DataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(UPDATE_QUERY);
         ) {
@@ -102,7 +128,7 @@ public class SimpleMultiPlayerDAO implements MultiPlayerDAO {
     }
 
     @Override
-    public void delete(Tuple<PlayerModel, PlayerModel> players) {
+    public void delete(PTuple<PlayerModel, PlayerModel> players) {
         try (Connection connection = DataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(DELETE_QUERY);
         ) {
@@ -115,25 +141,39 @@ public class SimpleMultiPlayerDAO implements MultiPlayerDAO {
     }
 
     @Override
-    public List<Tuple<PlayerModel, PlayerModel>> getAll() {
-        List<Tuple<PlayerModel, PlayerModel>> playersTuple = new ArrayList<>();
+    public void delete(String name1, String name2) {
+        try (Connection connection = DataSource.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(DELETE_QUERY);
+        ) {
+            stmt.setString(1, name1);
+            stmt.setString(2, name2);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<PTuple<PlayerModel, PlayerModel>> getAll() {
+        List<PTuple<PlayerModel, PlayerModel>> playersTuple = new ArrayList<>();
 
         try (Connection connection = DataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(SELECT_ALL_QUERY);
              ResultSet rs = stmt.executeQuery()) {
-            Tuple<PlayerModel, PlayerModel> playerTuple;
+            PTuple<PlayerModel, PlayerModel> playerTuple;
             while (rs.next()) {
-                playerTuple = new Tuple<>(new PlayerModel(), new PlayerModel());
+                playerTuple = new PTuple<>(new PlayerModel(), new PlayerModel());
                 playerTuple.getFirst().setName(rs.getString("name_1"));
                 playerTuple.getFirst().setScore(rs.getInt("score_1"));
                 playerTuple.getSecond().setName(rs.getString("name_2"));
                 playerTuple.getSecond().setScore(rs.getInt("score_2"));
                 playersTuple.add(playerTuple);
             }
+            return playersTuple;
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return playersTuple;
+        return null;
     }
 }

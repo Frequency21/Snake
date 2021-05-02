@@ -19,35 +19,21 @@ public class TopListController extends GameController implements Initializable {
     @FXML
     private TwoPlayerTabController twoPlayerTabController;
     private PlayerDAO playerDAO = new SimplePlayerDAO();
-    private boolean onePlayerDirty = false;
-    private boolean twoPlayerDirty = false;
 
     @Override
     public void init() { }
 
     @Override
-    public void onSwitch() { }
+    public void onSwitch() {
+        onePlayerTabController.showPlayers();
+        twoPlayerTabController.showPlayers();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         onePlayerTabController.setTopListController(this);
         twoPlayerTabController.setTopListController(this);
-        onePlayer.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (onePlayerDirty && newValue) {
-                onePlayerTabController.showPlayers();
-                onePlayerDirty = false;
-            }
-        });
-        twoPlayer.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (twoPlayerDirty && newValue) {
-                twoPlayerTabController.showPlayers();
-                twoPlayerDirty = false;
-            }
-        });
     }
 
-    public void goBack() {
-        onePlayerDirty = twoPlayerDirty = true;
-        sceneManager.switchScene("../starting.fxml");
-    }
+    public void goBack() { sceneManager.switchScene("../starting.fxml"); }
 }
