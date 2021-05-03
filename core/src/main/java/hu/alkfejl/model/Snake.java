@@ -276,8 +276,6 @@ public class Snake {
         body.add(bp);
     }
 
-    // TODO: 2021. 04. 21. uniq timer for slowing effect duration would be nice.. (for the GUI)
-
     /**
      * Timer class to trace slowing effect and snake speed
      * (slowing effect can stack, but snake's speed should never reach 0)

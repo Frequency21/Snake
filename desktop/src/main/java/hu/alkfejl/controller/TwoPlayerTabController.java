@@ -67,13 +67,11 @@ public class TwoPlayerTabController implements Initializable {
 
     public void save(ActionEvent actionEvent) {
         if (
-                nameOneTF.getText().isEmpty()
-                        || scoreOneTF.getText().isEmpty()
-                        || nameTwoTF.getText().isEmpty()
-                        || scoreTwoTF.getText().isEmpty()
+                !nameOneTF.getText().isEmpty()
+                        && !scoreOneTF.getText().isEmpty()
+                        && !nameTwoTF.getText().isEmpty()
+                        && !scoreTwoTF.getText().isEmpty()
         ) {
-            // TODO: 2021. 05. 01. alert
-        } else {
             PTuple<PlayerModel, PlayerModel> players = new PTuple<>(new PlayerModel(), new PlayerModel());
             players.getFirst().setName(nameOneTF.getText());
             players.getFirst().setScore(Integer.parseInt(scoreOneTF.getText()));
@@ -87,13 +85,11 @@ public class TwoPlayerTabController implements Initializable {
 
     public void update(ActionEvent actionEvent) {
         if (
-                nameOneTF.getText().isEmpty()
-                        || scoreOneTF.getText().isEmpty()
-                        || nameTwoTF.getText().isEmpty()
-                        || scoreTwoTF.getText().isEmpty()
+                !nameOneTF.getText().isEmpty()
+                        && !scoreOneTF.getText().isEmpty()
+                        && !nameTwoTF.getText().isEmpty()
+                        && !scoreTwoTF.getText().isEmpty()
         ) {
-            // TODO: 2021. 05. 01. alert
-        } else {
             PTuple<PlayerModel, PlayerModel> players = new PTuple<>(new PlayerModel(), new PlayerModel());
             players.getFirst().setName(nameOneTF.getText());
             players.getFirst().setScore(Integer.parseInt(scoreOneTF.getText()));
@@ -112,9 +108,7 @@ public class TwoPlayerTabController implements Initializable {
     }
 
     public void delete(ActionEvent actionEvent) {
-        if (nameOneTF.getText().isEmpty() || nameTwoTF.getText().isEmpty()) {
-            // TODO: 2021. 05. 01. alert
-        } else {
+        if (!nameOneTF.getText().isEmpty() && !nameTwoTF.getText().isEmpty()) {
             PTuple<PlayerModel, PlayerModel> players = new PTuple<>(new PlayerModel(), new PlayerModel());
             players.getFirst().setName(nameOneTF.getText());
             players.getSecond().setName(nameTwoTF.getText());

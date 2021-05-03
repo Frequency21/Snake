@@ -54,11 +54,9 @@ public class OnePlayerTabController implements Initializable {
 
     public void save(ActionEvent actionEvent) {
         if (
-                nameTF.getText().isEmpty()
-                || scoreTF.getText().isEmpty()
+                !nameTF.getText().isEmpty()
+                        && !scoreTF.getText().isEmpty()
         ) {
-            // TODO: 2021. 05. 01. alert
-        } else {
             PlayerModel player = new PlayerModel();
             player.setName(nameTF.getText());
             player.setScore(Integer.parseInt(scoreTF.getText()));
@@ -71,11 +69,9 @@ public class OnePlayerTabController implements Initializable {
 
     public void update(ActionEvent actionEvent) {
         if (
-                nameTF.getText().isEmpty()
-                || scoreTF.getText().isEmpty()
+                !nameTF.getText().isEmpty()
+                        && !scoreTF.getText().isEmpty()
         ) {
-            // TODO: 2021. 05. 01. alert
-        } else {
             PlayerModel player = new PlayerModel();
             player.setName(nameTF.getText());
             player.setScore(Integer.parseInt(scoreTF.getText()));
@@ -87,10 +83,8 @@ public class OnePlayerTabController implements Initializable {
 
     public void delete(ActionEvent actionEvent) {
         if (
-                nameTF.getText().isEmpty()
+                !nameTF.getText().isEmpty()
         ) {
-            // TODO: 2021. 05. 01. alert
-        } else {
             PlayerModel player = new PlayerModel();
             player.setName(nameTF.getText());
             playerDAO.delete(player);

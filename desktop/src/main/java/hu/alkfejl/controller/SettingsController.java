@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 
 
-// TODO: 2021. 04. 16. refactor foodColor for every type..
 public class SettingsController extends GameController {
 
     @FXML

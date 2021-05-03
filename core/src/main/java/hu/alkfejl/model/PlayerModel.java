@@ -2,7 +2,6 @@ package hu.alkfejl.model;
 
 import javafx.beans.property.*;
 
-// TODO: 2021. 04. 15. increment score based on snake's speed
 public class PlayerModel {
     private final IntegerProperty score = new SimpleIntegerProperty(this, "score");
     private final StringProperty name = new SimpleStringProperty(this, "name");
