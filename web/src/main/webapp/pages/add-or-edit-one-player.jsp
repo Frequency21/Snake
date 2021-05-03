@@ -16,14 +16,14 @@
         <div class="form-group">
             <label for="name">Név</label>
             <input required name="name" type="text" class="form-control" id="name"
-                   placeholder="Enter name" value="${player.name}"/>
+                   placeholder="Python" value="${player.name}"/>
         </div>
         <div class="form-group">
             <label for="score">Pontszám</label>
             <input required name="score" type="number" class="form-control" id="score"
                    placeholder="25" value="${player.score}"/>
         </div>
-        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+        <button id="submit" type="submit" class="btn btn-primary">Küldés</button>
     </form>
 </div>
 

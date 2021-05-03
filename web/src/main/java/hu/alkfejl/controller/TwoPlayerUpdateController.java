@@ -22,8 +22,7 @@ public class TwoPlayerUpdateController extends HttpServlet {
         String name_1 = req.getParameter("name_1");
         String name_2 = req.getParameter("name_2");
         PTuple<PlayerModel, PlayerModel> playersTuple = mpDAO.get(name_1, name_2);
-
         req.setAttribute("playersTuple", playersTuple);
-        req.getRequestDispatcher("pages/add-or-edit-two-player.jsp").forward(req, resp);
-    }
+
+        req.getRequestDispatcher("pages/add-or-edit-two-player.jsp").forward(req, resp);}
 }

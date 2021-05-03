@@ -28,9 +28,9 @@
 
 <jsp:include page="/OnePlayerController"/>
 
-<div class="container topList">
+<div class="container">
 
-    <div class="d-flex justify-content-center mb-2">
+    <div class="d-flex justify-content-center my-4">
         <a href="../OnePlayerAddController" class="btn btn-outline-primary mx-auto">
             <i class="fas fa-plus"></i>
             Felvitel

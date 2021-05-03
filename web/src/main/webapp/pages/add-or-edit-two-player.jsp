@@ -9,7 +9,7 @@
 <body>
 <jsp:useBean id="playersTuple" class="hu.alkfejl.model.PTuple" scope="request"/>
 
-<div class="container">
+<div class="container player-form">
     <form action="${pageContext.request.contextPath}/TwoPlayerController" method="post">
         <input type="hidden" name="oldName_1" value="${playersTuple.first.name}"/>
         <input type="hidden" name="oldName_2" value="${playersTuple.second.name}"/>
@@ -33,7 +33,7 @@
             <input required name="score_2" type="number" class="form-control" id="score_2"
                    placeholder="25" value="${playersTuple.second.score}"/>
         </div>
-        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+        <button id="submit" type="submit" class="btn btn-primary">Küldés</button>
     </form>
 </div>
 
