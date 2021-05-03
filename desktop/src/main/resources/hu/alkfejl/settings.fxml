@@ -23,24 +23,20 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints />
             </rowConstraints>
             <children>
-                <Label alignment="CENTER_RIGHT" text="Kaja színe:"/>
-                <ColorPicker fx:id="foodColorCP" GridPane.columnIndex="1" />
+                <Label alignment="CENTER_RIGHT" text="Kígyó színe (első játékos):" GridPane.rowIndex="0"/>
+                <ColorPicker fx:id="snake1ColorCP" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                <Label alignment="CENTER_RIGHT" text="Kígyó színe (első játékos):" GridPane.rowIndex="1"/>
-                <ColorPicker fx:id="snake1ColorCP" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label alignment="CENTER_RIGHT" text="Kígyó színe (második játékos):" GridPane.rowIndex="1"/>
+                <ColorPicker fx:id="snake2ColorCP" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                <Label alignment="CENTER_RIGHT" text="Kígyó színe (második játékos):" GridPane.rowIndex="2"/>
-                <ColorPicker fx:id="snake2ColorCP" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label alignment="CENTER_RIGHT" text="Kígyók alapsebessége:" GridPane.rowIndex="2"/>
+                <Spinner fx:id="snakeSpeedSp" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                <Label alignment="CENTER_RIGHT" text="Kígyók alapsebessége:" GridPane.rowIndex="3"/>
-                <Spinner fx:id="snakeSpeedSp" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-                <Label alignment="CENTER_RIGHT" text="Pálya mérete:" GridPane.rowIndex="4"/>
-                <Spinner fx:id="boardSizeSp" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label alignment="CENTER_RIGHT" text="Pálya mérete:" GridPane.rowIndex="3"/>
+                <Spinner fx:id="boardSizeSp" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             </children>
         </GridPane>
         <CheckBox fx:id="boundaryCB" contentDisplay="CENTER" mnemonicParsing="false" text="legyenek falak" />

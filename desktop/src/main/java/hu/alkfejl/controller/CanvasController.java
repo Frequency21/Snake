@@ -133,6 +133,8 @@ public class CanvasController extends GameController {
         gc = canvas.getGraphicsContext2D();
         try {
             game.generateFruit();
+            if (game.isMultiPlayer())
+                game.generateFruit();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -175,7 +177,8 @@ public class CanvasController extends GameController {
                 }
 
                 /* after snakes move, did they collide? */
-                game.checkCollision();
+                if (game.isMultiPlayer())
+                    game.checkCollision();
                 tick(gc);
                 if (game.getStatus() == GameStatus.OVER)
                     exit();
