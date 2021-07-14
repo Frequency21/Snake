@@ -1,35 +1,41 @@
 # Snake
 
-## Fordítás & futtatás
+## Rövid ismertető
 
-Kedves javító! 
+Ez a játék egy egyetemi kurzus keretein belül készült el. Céljai között az MVC tervezési minta megismerése és elsajátítása egy asztali és webes alkalmazás fejlesztése során.
+Megkötések: a játékot java nyelven kellett fejeszteni, a desktop résznél JavaFX-et, a webes rész megvalósításához JSP technológiát kellett használni. Az adatbázisra nem jutott hangsúly a kurzus során, ezért egy egyszerű kis SQLite-ot használtunk.
+
+A játék követelményspecifikációja az alábbi linken tekinthető meg:
+
+https://okt.sed.hu/alkfejl1/gyakorlat/kotprog/snake/
+
+## Fordítás & futtatás
 
 A projektet a gyakorlati anyagban ismertett verziójú programokkal igyekeztem összeállítani,
 így a fordítása / futtatása nem tér el elvileg a bemutatott módszerektől.
 
-A sikeres futtatás érdekében át kell írni a jdbc url-jét ezen az útvonalon:[^1]
+A sikeres futtatás érdekében át kell írni a jdbc url-jét ezen az útvonalon:
 > core/src/main/resources/application.properties
 
-[^1]:   az adatbázist magát is csomagoltam / felraktam a projektbe, viszont ha mégis balül
-    sülne el valami, akkor itt a DDL hozzá
-    ```sql
-    create table one_player
-    (
-        name nvarchar(50) constraint name primary key,
-        score int default 0
-    );
+az adatbázist magát is csomagoltam / felraktam a projektbe, viszont ha mégis balul
+sülne el valami, akkor itt a DDL hozzá
+```sql
+create table one_player
+(
+    name nvarchar(50) constraint name primary key,
+    score int default 0
+);
 
 
-    create table two_player
-    (
-        name_1 nvarchar(50),
-        score_1 int default 0,
-        name_2 nvarchar(50),
-        score_2 int default 0,
-        constraint names primary key (name_1, name_2)
-    );
-    ```
-
+create table two_player
+(
+    name_1 nvarchar(50),
+    score_1 int default 0,
+    name_2 nvarchar(50),
+    score_2 int default 0,
+    constraint names primary key (name_1, name_2)
+);
+```
 
 Ezt követően a desktop rész az alábbi (root directoryben kiadott) parancsokkal futtatható:
 > mvn install
